@@ -1,0 +1,230 @@
+/* Symptom Reporting Styles */
+.symptom-reporting {
+  padding: 24px;
+  min-height: calc(100vh - 80px);
+  background: var(--color-bg-container);
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.reporting-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin-bottom: 24px;
+}
+
+.reporting-card .ant-card-head {
+  background: linear-gradient(135deg, #1890ff, #52c41a);
+  border-bottom: none;
+}
+
+.reporting-card .ant-card-head-title {
+  color: white;
+  font-weight: 600;
+}
+
+.guidelines-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin-bottom: 16px;
+  border-left: 4px solid #ff4d4f;
+}
+
+.prevention-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-left: 4px solid #52c41a;
+}
+
+.guideline-section {
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  border-left: 3px solid #ff7875;
+}
+
+.guideline-section ul {
+  margin: 8px 0 0 0;
+  padding-left: 20px;
+}
+
+.guideline-section li {
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.success-card {
+  text-align: center;
+  border-radius: 12px;
+  border: 2px solid #52c41a;
+  box-shadow: 0 4px 16px rgba(82, 196, 26, 0.2);
+}
+
+.success-content {
+  padding: 40px 20px;
+}
+
+.success-icon {
+  font-size: 64px;
+  color: #52c41a;
+  margin-bottom: 24px;
+  animation: successPulse 2s ease-in-out infinite;
+}
+
+@keyframes successPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.next-steps {
+  margin: 24px 0;
+  text-align: left;
+  background: #f6ffed;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #b7eb8f;
+}
+
+.next-steps ul {
+  margin: 12px 0 0 0;
+  padding-left: 20px;
+}
+
+.next-steps li {
+  margin-bottom: 8px;
+  color: #389e0d;
+}
+
+/* Form styling */
+.ant-form-item-label > label {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.ant-select-multiple .ant-select-selection-item {
+  background: #e6f7ff;
+  border: 1px solid #91d5ff;
+  border-radius: 4px;
+}
+
+.ant-form-item-explain-error {
+  color: #ff4d4f;
+  font-size: 12px;
+}
+
+/* Emergency severity indicators */
+.ant-select-item-option-content span[style*="color"] {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .symptom-reporting {
+    padding: 16px;
+  }
+  
+  .guideline-section {
+    padding: 8px;
+  }
+  
+  .success-content {
+    padding: 20px 10px;
+  }
+  
+  .success-icon {
+    font-size: 48px;
+  }
+  
+  .next-steps {
+    padding: 16px;
+  }
+}
+
+/* Dark mode styles */
+[data-theme="dark"] .symptom-reporting {
+  background: var(--color-bg-container);
+}
+
+[data-theme="dark"] .reporting-card {
+  background: var(--color-bg-container);
+  border-color: #434343;
+}
+
+[data-theme="dark"] .guidelines-card {
+  background: var(--color-bg-container);
+  border-color: #434343;
+}
+
+[data-theme="dark"] .prevention-card {
+  background: var(--color-bg-container);
+  border-color: #434343;
+}
+
+[data-theme="dark"] .guideline-section {
+  background: #2a2a2a;
+  border-color: #ff7875;
+}
+
+[data-theme="dark"] .next-steps {
+  background: #1a2a1a;
+  border-color: #52c41a;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .next-steps li {
+  color: #73d13d;
+}
+
+[data-theme="dark"] .success-card {
+  background: var(--color-bg-container);
+  border-color: #52c41a;
+}
+
+/* Animation for form submission */
+.reporting-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Highlight urgent fields */
+.ant-form-item-has-error .ant-input,
+.ant-form-item-has-error .ant-select-selector {
+  border-color: #ff4d4f;
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
+}
+
+/* Submit button styling */
+.ant-btn-primary {
+  background: linear-gradient(135deg, #1890ff, #52c41a);
+  border: none;
+  font-weight: 600;
+  height: 40px;
+  padding: 0 24px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.ant-btn-primary:hover {
+  background: linear-gradient(135deg, #40a9ff, #73d13d);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}

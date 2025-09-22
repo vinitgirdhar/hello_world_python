@@ -1,0 +1,212 @@
+/* Error Boundary Styles */
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: var(--bg-color);
+  transition: background-color 0.3s ease;
+}
+
+.error-card {
+  max-width: 600px;
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  animation: slideUp 0.4s ease-out;
+}
+
+[data-theme="dark"] .error-card {
+  background: #1f1f1f;
+  border-color: #303030;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-icon {
+  color: #ff4d4f;
+  font-size: 64px;
+  animation: bounce 1s ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.error-details {
+  text-align: left;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.error-details .ant-typography {
+  color: var(--text-color);
+  transition: color 0.3s ease;
+}
+
+.error-suggestions {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 16px 0;
+}
+
+.error-suggestions li {
+  padding: 8px 0;
+  padding-left: 24px;
+  position: relative;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+.error-suggestions li:before {
+  content: "•";
+  color: var(--primary-color);
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+.error-technical {
+  margin-top: 24px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--hover-bg);
+  transition: all 0.3s ease;
+}
+
+.error-technical summary {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-color);
+  background: var(--card-bg);
+  border-radius: 8px 8px 0 0;
+  transition: all 0.3s ease;
+}
+
+.error-technical summary:hover {
+  background: var(--hover-bg);
+}
+
+.error-stack {
+  padding: 16px;
+  background: var(--hover-bg);
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.4;
+  overflow-x: auto;
+  margin: 0;
+  border-radius: 0 0 8px 8px;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Button styling */
+.error-boundary .ant-btn {
+  border-radius: 8px;
+  height: auto;
+  padding: 12px 24px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.error-boundary .ant-btn-primary {
+  background: linear-gradient(135deg, #1890ff, #096dd9);
+  border: none;
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+.error-boundary .ant-btn-primary:hover {
+  background: linear-gradient(135deg, #096dd9, #0050b3);
+  box-shadow: 0 6px 16px rgba(24, 144, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.error-boundary .ant-btn:not(.ant-btn-primary) {
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.error-boundary .ant-btn:not(.ant-btn-primary):hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+/* Dark mode specific styles */
+[data-theme="dark"] .error-boundary {
+  background: #141414;
+}
+
+[data-theme="dark"] .error-details .ant-typography {
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .error-suggestions li {
+  color: #8c8c8c;
+}
+
+[data-theme="dark"] .error-technical {
+  border-color: #303030;
+  background: #262626;
+}
+
+[data-theme="dark"] .error-technical summary {
+  background: #1f1f1f;
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .error-technical summary:hover {
+  background: #262626;
+}
+
+[data-theme="dark"] .error-stack {
+  background: #262626;
+  color: #8c8c8c;
+  border-top-color: #303030;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .error-boundary {
+    padding: 16px;
+  }
+  
+  .error-card {
+    border-radius: 8px;
+  }
+  
+  .error-icon {
+    font-size: 48px;
+  }
+  
+  .error-boundary .ant-btn {
+    width: 100%;
+    margin-bottom: 12px;
+  }
+  
+  .error-details {
+    padding: 0 8px;
+  }
+}

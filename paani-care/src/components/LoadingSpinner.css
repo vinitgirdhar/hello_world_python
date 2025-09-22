@@ -1,0 +1,106 @@
+/* Loading Spinner Styles */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px 20px;
+  min-height: 200px;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .loading-overlay {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 32px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color);
+  animation: fadeInScale 0.3s ease-out;
+}
+
+[data-theme="dark"] .loading-content {
+  background: #1f1f1f;
+  border-color: #303030;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.loading-message {
+  font-size: 14px;
+  text-align: center;
+  margin-top: 8px;
+  color: var(--text-secondary);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Professional spinner styling */
+.ant-spin-dot {
+  color: var(--primary-color);
+}
+
+.ant-spin-spinning {
+  color: var(--primary-color);
+}
+
+/* Enhanced loading for large screens */
+@media (min-width: 768px) {
+  .loading-container {
+    min-height: 300px;
+    padding: 60px 40px;
+  }
+  
+  .loading-content {
+    padding: 48px;
+    min-width: 200px;
+  }
+}
+
+/* Smooth transitions */
+.loading-container,
+.loading-overlay,
+.loading-content,
+.loading-message {
+  transition: all 0.3s ease;
+}

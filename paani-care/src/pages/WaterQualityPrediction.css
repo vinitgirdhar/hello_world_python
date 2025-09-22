@@ -1,0 +1,499 @@
+.water-quality-prediction {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.prediction-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.prediction-header h2 {
+  color: var(--primary-color);
+  font-size: 28px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.prediction-header p {
+  color: var(--text-secondary);
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Stats Row */
+.stats-row {
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-hover-shadow);
+}
+
+.stat-card .ant-statistic-title {
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.stat-card .ant-statistic-content {
+  color: var(--text-color);
+}
+
+/* Analysis Card */
+.analysis-card {
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  height: fit-content;
+}
+
+.analysis-card .ant-card-head-title {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* Form Styling */
+.ant-form-item-label > label {
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.ant-input,
+.ant-select-selector,
+.ant-input-number {
+  background: var(--background-light);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.ant-input:focus,
+.ant-select-focused .ant-select-selector,
+.ant-input-number:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.ant-slider-rail {
+  background: var(--background-light);
+}
+
+.ant-slider-track {
+  background: var(--primary-color);
+}
+
+.ant-slider-handle {
+  border-color: var(--primary-color);
+}
+
+.ant-slider-handle:focus {
+  box-shadow: 0 0 0 5px rgba(24, 144, 255, 0.2);
+}
+
+/* Results Card */
+.results-card {
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+}
+
+.results-card .ant-card-head-title {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.prediction-results {
+  padding: 16px 0;
+}
+
+.risk-assessment {
+  margin-bottom: 24px;
+}
+
+.risk-level {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.risk-level.low {
+  background: rgba(82, 196, 26, 0.1);
+  border: 2px solid #52c41a;
+  color: #52c41a;
+}
+
+.risk-level.medium {
+  background: rgba(250, 173, 20, 0.1);
+  border: 2px solid #faad14;
+  color: #faad14;
+}
+
+.risk-level.high {
+  background: rgba(255, 122, 69, 0.1);
+  border: 2px solid #ff7a45;
+  color: #ff7a45;
+}
+
+.risk-level.critical {
+  background: rgba(255, 77, 79, 0.1);
+  border: 2px solid #ff4d4f;
+  color: #ff4d4f;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.risk-text {
+  margin-left: 8px;
+}
+
+.predicted-diseases {
+  margin-bottom: 24px;
+}
+
+.predicted-diseases h4 {
+  color: var(--primary-color);
+  margin-bottom: 12px;
+}
+
+.disease-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.disease-item:last-child {
+  border-bottom: none;
+}
+
+.recommendations {
+  margin-bottom: 24px;
+}
+
+.recommendations h4 {
+  color: var(--primary-color);
+  margin-bottom: 12px;
+}
+
+.recommendations ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.recommendations li {
+  color: var(--text-color);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.confidence-meter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.confidence-meter span {
+  color: var(--text-color);
+  font-weight: 500;
+  min-width: 120px;
+}
+
+.no-prediction {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-secondary);
+}
+
+.no-prediction p {
+  margin-top: 16px;
+  font-size: 16px;
+}
+
+/* Chart Cards */
+.chart-card {
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+}
+
+.chart-card .ant-card-head-title {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.chart-card canvas {
+  max-height: 400px !important;
+}
+
+/* History Card */
+.history-card {
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+}
+
+.history-card .ant-card-head-title {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.timeline-item {
+  padding: 8px 0;
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.timeline-header .location {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 16px;
+}
+
+.timeline-content {
+  color: var(--text-secondary);
+}
+
+.timeline-content p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.timestamp {
+  font-size: 12px !important;
+  color: var(--text-secondary) !important;
+  font-style: italic;
+}
+
+/* Progress Bars */
+.ant-progress-text {
+  color: var(--text-color) !important;
+}
+
+.ant-progress-bg {
+  background: var(--background-light) !important;
+}
+
+/* Button Styling */
+.ant-btn-primary {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.ant-btn-primary:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
+.ant-btn-primary.ant-btn-loading {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+/* Tag Styling */
+.ant-tag {
+  border-radius: 4px;
+  font-weight: 500;
+  padding: 4px 8px;
+}
+
+/* Timeline Styling */
+.ant-timeline-item-content {
+  margin-left: 16px;
+}
+
+.ant-timeline .ant-timeline-item-tail {
+  border-left-color: var(--border-color);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .water-quality-prediction {
+    padding: 16px;
+  }
+
+  .chart-card canvas {
+    max-height: 300px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .prediction-header h2 {
+    font-size: 24px;
+  }
+
+  .risk-level {
+    font-size: 16px;
+    padding: 12px;
+  }
+
+  .timeline-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .disease-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .confidence-meter {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .confidence-meter span {
+    min-width: auto;
+  }
+
+  .stats-row .ant-col {
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .prediction-header h2 {
+    font-size: 20px;
+  }
+
+  .prediction-header p {
+    font-size: 14px;
+  }
+
+  .risk-level {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .chart-card canvas {
+    max-height: 250px !important;
+  }
+
+  .no-prediction {
+    padding: 32px 16px;
+  }
+
+  .timeline-content p {
+    font-size: 13px;
+  }
+}
+
+/* Dark mode specific adjustments */
+[data-theme="dark"] .water-quality-prediction {
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .risk-level.low {
+  background: rgba(82, 196, 26, 0.15);
+  color: #73d13d;
+}
+
+[data-theme="dark"] .risk-level.medium {
+  background: rgba(250, 173, 20, 0.15);
+  color: #ffc53d;
+}
+
+[data-theme="dark"] .risk-level.high {
+  background: rgba(255, 122, 69, 0.15);
+  color: #ff9c6e;
+}
+
+[data-theme="dark"] .risk-level.critical {
+  background: rgba(255, 77, 79, 0.15);
+  color: #ff7875;
+}
+
+[data-theme="dark"] .disease-item {
+  border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .ant-input::placeholder,
+[data-theme="dark"] .ant-select-selection-placeholder {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .ant-slider-mark-text {
+  color: var(--text-secondary);
+}
+
+/* Loading States */
+.ant-btn-loading .ant-btn-loading-icon {
+  margin-right: 8px;
+}
+
+/* Custom Scrollbar for Timeline */
+.ant-timeline::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ant-timeline::-webkit-scrollbar-track {
+  background: var(--background-light);
+  border-radius: 3px;
+}
+
+.ant-timeline::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+.ant-timeline::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}
+
+/* Animation for new predictions */
+.prediction-results {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

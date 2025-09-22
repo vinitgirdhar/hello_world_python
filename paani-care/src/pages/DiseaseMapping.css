@@ -1,0 +1,379 @@
+.disease-mapping {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.disease-mapping-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.disease-mapping-header h2 {
+  color: var(--primary-color);
+  font-size: 28px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.disease-mapping-header p {
+  color: var(--text-secondary);
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Summary Cards */
+.summary-cards {
+  margin-bottom: 24px;
+}
+
+.summary-card {
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-hover-shadow);
+}
+
+.summary-card.active {
+  border-left: 4px solid #ff4d4f;
+}
+
+.summary-card.high-severity {
+  border-left: 4px solid #faad14;
+}
+
+.summary-content {
+  text-align: center;
+  padding: 16px;
+}
+
+.summary-number {
+  font-size: 32px;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin-bottom: 8px;
+}
+
+.summary-label {
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Controls Section */
+.controls-section {
+  margin-bottom: 24px;
+}
+
+/* Reports Table */
+.reports-table-card {
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  margin-bottom: 24px;
+}
+
+.reports-table-card h3 {
+  color: var(--primary-color);
+  margin-bottom: 16px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.expanded-row {
+  background: var(--background-light);
+  padding: 16px;
+  border-radius: 8px;
+  margin: 8px 0;
+}
+
+.expanded-row strong {
+  color: var(--primary-color);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.expanded-row p {
+  color: var(--text-color);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Map Card */
+.map-card {
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+}
+
+.map-card h3 {
+  color: var(--primary-color);
+  margin-bottom: 16px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.map-placeholder {
+  position: relative;
+  height: 400px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  overflow: hidden;
+}
+
+.zone-legend {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--card-background);
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border-color);
+}
+
+.legend-item {
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.legend-item:last-child {
+  margin-bottom: 0;
+}
+
+.map-content {
+  text-align: center;
+  z-index: 1;
+}
+
+.map-content p {
+  margin: 8px 0;
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+.zone-marker {
+  position: absolute;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  animation: pulse 2s infinite;
+}
+
+.zone-marker.high {
+  background: rgba(255, 77, 79, 0.9);
+  color: white;
+  top: 25%;
+  left: 30%;
+}
+
+.zone-marker.medium {
+  background: rgba(250, 173, 20, 0.9);
+  color: white;
+  top: 45%;
+  right: 25%;
+}
+
+.zone-marker.low {
+  background: rgba(82, 196, 26, 0.9);
+  color: white;
+  bottom: 30%;
+  left: 40%;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Modal Styling */
+.ant-modal-header {
+  background: var(--card-background);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.ant-modal-content {
+  background: var(--card-background);
+}
+
+.ant-modal-title {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* Form Styling */
+.ant-form-item-label > label {
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.ant-input,
+.ant-select-selector {
+  background: var(--background-light);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.ant-input:focus,
+.ant-select-focused .ant-select-selector {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.ant-btn-primary {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.ant-btn-primary:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
+/* Table Styling */
+.ant-table {
+  background: var(--card-background);
+}
+
+.ant-table-thead > tr > th {
+  background: var(--background-light);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: var(--background-light);
+}
+
+/* Alert Styling */
+.ant-alert {
+  border-radius: 8px;
+  border: none;
+}
+
+.ant-alert-error {
+  background: rgba(255, 77, 79, 0.1);
+  border-left: 4px solid #ff4d4f;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .disease-mapping {
+    padding: 16px;
+  }
+
+  .disease-mapping-header h2 {
+    font-size: 24px;
+  }
+
+  .summary-number {
+    font-size: 24px;
+  }
+
+  .zone-legend {
+    position: relative;
+    margin-bottom: 16px;
+    top: auto;
+    right: auto;
+  }
+
+  .map-placeholder {
+    height: 300px;
+  }
+
+  .controls-section .ant-col {
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .disease-mapping-header h2 {
+    font-size: 20px;
+  }
+
+  .disease-mapping-header p {
+    font-size: 14px;
+  }
+
+  .summary-number {
+    font-size: 20px;
+  }
+
+  .map-placeholder {
+    height: 250px;
+  }
+
+  .map-content p {
+    font-size: 14px;
+  }
+
+  .zone-marker {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+}
+
+/* Dark mode specific adjustments */
+[data-theme="dark"] .disease-mapping {
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .map-placeholder {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .zone-legend {
+  background: var(--card-background);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .ant-alert-error {
+  background: rgba(255, 77, 79, 0.15);
+  color: #ff7875;
+}
+
+[data-theme="dark"] .ant-input::placeholder,
+[data-theme="dark"] .ant-select-selection-placeholder {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .ant-table-thead > tr > th {
+  background: var(--background-dark);
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .ant-table-tbody > tr:hover > td {
+  background: var(--background-dark);
+}

@@ -1,0 +1,169 @@
+.health-data {
+  padding: 0;
+  background-color: transparent;
+  min-height: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--primary-color);
+  transition: color 0.3s ease;
+}
+
+.page-header p {
+  margin: 4px 0 0 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.search-card {
+  margin-bottom: 24px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  transition: all 0.3s ease;
+}
+
+.search-card .ant-card-body {
+  padding: 20px;
+  background: var(--card-bg);
+}
+
+.search-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Table styling */
+.ant-table {
+  background: var(--card-bg);
+}
+
+.ant-table-thead > tr > th {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: var(--hover-bg);
+}
+
+/* Modal styling */
+.ant-modal-content {
+  background: var(--card-bg);
+}
+
+.ant-modal-header {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.ant-modal-title {
+  color: var(--text-color);
+}
+
+.ant-modal-footer {
+  border-top: 1px solid var(--border-color);
+  background: var(--card-bg);
+}
+
+/* Form styling */
+.ant-form-item-label > label {
+  color: var(--text-color);
+}
+
+/* Dark Mode Specific Styles */
+[data-theme="dark"] .health-data {
+  background-color: #141414;
+}
+
+[data-theme="dark"] .page-header h1 {
+  color: #1890ff;
+}
+
+[data-theme="dark"] .page-header p {
+  color: #8c8c8c;
+}
+
+[data-theme="dark"] .search-card {
+  background: #1f1f1f;
+  border-color: #303030;
+}
+
+[data-theme="dark"] .search-card .ant-card-body {
+  background: #1f1f1f;
+}
+
+[data-theme="dark"] .search-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .ant-table {
+  background: #1f1f1f;
+}
+
+[data-theme="dark"] .ant-table-thead > tr > th {
+  background: #1f1f1f;
+  border-bottom-color: #303030;
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .ant-table-tbody > tr > td {
+  border-bottom-color: #303030;
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .ant-table-tbody > tr:hover > td {
+  background: #262626;
+}
+
+[data-theme="dark"] .ant-modal-content {
+  background: #1f1f1f;
+}
+
+[data-theme="dark"] .ant-modal-header {
+  background: #1f1f1f;
+  border-bottom-color: #303030;
+}
+
+[data-theme="dark"] .ant-modal-title {
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .ant-modal-footer {
+  border-top-color: #303030;
+  background: #1f1f1f;
+}
+
+[data-theme="dark"] .ant-form-item-label > label {
+  color: #f0f0f0;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .page-header h1 {
+    font-size: 24px;
+  }
+}

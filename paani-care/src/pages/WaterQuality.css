@@ -1,0 +1,271 @@
+.water-quality {
+  padding: 0;
+  background-color: transparent;
+  min-height: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--primary-color);
+  transition: color 0.3s ease;
+}
+
+.page-header p {
+  margin: 4px 0 0 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.auto-refresh {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+.stats-row {
+  margin-bottom: 24px;
+}
+
+.chart-card {
+  margin-bottom: 24px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  transition: all 0.3s ease;
+}
+
+.chart-card .ant-card-body {
+  padding: 20px;
+  background: var(--card-bg);
+}
+
+.chart-card .ant-card-head {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.chart-card .ant-card-head-title {
+  color: var(--text-color);
+}
+
+.chart-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.source-name {
+  font-weight: 600;
+  color: var(--text-color);
+  transition: color 0.3s ease;
+}
+
+/* Statistics cards styling */
+.ant-statistic {
+  background: var(--card-bg);
+}
+
+.ant-statistic-title {
+  color: var(--text-secondary) !important;
+}
+
+.ant-statistic-content {
+  color: var(--text-color) !important;
+}
+
+/* Table styling */
+.ant-table {
+  background: var(--card-bg);
+}
+
+.ant-table-thead > tr > th {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: var(--hover-bg);
+}
+
+/* Modal styling */
+.ant-modal-content {
+  background: var(--card-bg);
+}
+
+.ant-modal-header {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.ant-modal-title {
+  color: var(--text-color);
+}
+
+.ant-modal-footer {
+  border-top: 1px solid var(--border-color);
+  background: var(--card-bg);
+}
+
+/* Form styling */
+.ant-form-item-label > label {
+  color: var(--text-color);
+}
+
+/* Dark Mode Specific Styles */
+[data-theme="dark"] .water-quality {
+  background-color: #141414;
+}
+
+[data-theme="dark"] .page-header h1 {
+  color: #1890ff;
+}
+
+[data-theme="dark"] .page-header p {
+  color: #8c8c8c;
+}
+
+[data-theme="dark"] .auto-refresh {
+  color: #8c8c8c;
+}
+
+[data-theme="dark"] .chart-card {
+  background: #1f1f1f;
+  border-color: #303030;
+}
+
+[data-theme="dark"] .chart-card .ant-card-body {
+  background: #1f1f1f;
+}
+
+[data-theme="dark"] .chart-card .ant-card-head {
+  background: #1f1f1f;
+  border-bottom-color: #303030;
+}
+
+[data-theme="dark"] .chart-card .ant-card-head-title {
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .chart-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .source-name {
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .ant-statistic-title {
+  color: #8c8c8c !important;
+}
+
+[data-theme="dark"] .ant-statistic-content {
+  color: #f0f0f0 !important;
+}
+
+[data-theme="dark"] .ant-table {
+  background: #1f1f1f;
+}
+
+[data-theme="dark"] .ant-table-thead > tr > th {
+  background: #1f1f1f;
+  border-bottom-color: #303030;
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .ant-table-tbody > tr > td {
+  border-bottom-color: #303030;
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .ant-table-tbody > tr:hover > td {
+  background: #262626;
+}
+
+[data-theme="dark"] .ant-modal-content {
+  background: #1f1f1f;
+}
+
+[data-theme="dark"] .ant-modal-header {
+  background: #1f1f1f;
+  border-bottom-color: #303030;
+}
+
+[data-theme="dark"] .ant-modal-title {
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .ant-modal-footer {
+  border-top-color: #303030;
+  background: #1f1f1f;
+}
+
+[data-theme="dark"] .ant-form-item-label > label {
+  color: #f0f0f0;
+}
+
+.source-id {
+  font-size: 12px;
+  color: #999;
+}
+
+.test-time {
+  font-size: 12px;
+  color: #999;
+}
+
+.param-safe {
+  color: #52c41a;
+  font-weight: 600;
+}
+
+.param-danger {
+  color: #f5222d;
+  font-weight: 600;
+}
+
+.water-details .ant-statistic {
+  text-align: center;
+}
+
+.water-details .ant-statistic-title {
+  font-size: 14px;
+}
+
+.water-details .ant-statistic-content {
+  font-size: 20px;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .page-header h1 {
+    font-size: 24px;
+  }
+  
+  .chart-card {
+    height: 350px;
+  }
+}

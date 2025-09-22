@@ -1,0 +1,102 @@
+/* Enhanced Public Layout Styles */
+.public-layout {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+.public-layout.dark {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+}
+
+.public-content {
+  flex: 1;
+  padding-top: 80px; /* Account for fixed navbar */
+  min-height: calc(100vh - 80px);
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+.public-content .content-wrapper {
+  flex: 1;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  margin: 0;
+}
+
+.public-layout.dark .public-content {
+  background: transparent;
+  color: #ffffff;
+}
+
+/* Override for pages that need custom spacing */
+.public-content.no-padding {
+  padding-top: 0;
+}
+
+.public-content.hero-spacing {
+  padding-top: 0; /* Hero sections handle their own spacing */
+}
+
+/* Enhanced Content Areas */
+.public-content section {
+  position: relative;
+  overflow: hidden;
+}
+
+.public-content .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Smooth Transitions */
+.public-layout,
+.public-content {
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .public-content .container {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .public-content {
+    padding-top: 70px; /* Smaller navbar on mobile */
+  }
+  
+  .public-content .container {
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .public-content {
+    padding-top: 60px;
+  }
+  
+  .public-content .container {
+    padding: 0 12px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .public-layout {
+    background: white !important;
+  }
+  
+  .public-content {
+    padding-top: 0 !important;
+    background: white !important;
+    color: black !important;
+  }
+}

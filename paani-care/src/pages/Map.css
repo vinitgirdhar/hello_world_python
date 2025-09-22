@@ -1,0 +1,370 @@
+/* Map Component Styles with Google Maps Integration */
+
+/* Main Map Container */
+.map-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--color-bg-container, #f0f2f5);
+  transition: background-color 0.3s ease;
+}
+
+/* Dark theme override */
+[data-theme="dark"] .map-container {
+  background: #001529;
+}
+
+/* Map Header Styles */
+.map-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  padding: 15px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .map-header {
+  background: rgba(0, 21, 41, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.map-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #001529;
+  background: linear-gradient(135deg, #1890ff, #722ed1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-theme="dark"] .map-header h2 {
+  color: #fff;
+}
+
+/* Google Maps Container */
+.map-container > div:last-child {
+  width: 100% !important;
+  height: 100% !important;
+  margin-top: 80px;
+  border-radius: 0;
+}
+
+/* Custom Google Maps Controls */
+.gm-style-iw {
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.gm-style-iw-d {
+  overflow: hidden !important;
+}
+
+/* Weather Widget */
+.weather-widget {
+  position: absolute;
+  top: 100px;
+  right: 20px;
+  z-index: 1000;
+  width: 250px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.weather-widget:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] .weather-widget {
+  background: rgba(0, 21, 41, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.weather-widget .ant-card-head-title {
+  color: #1890ff;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .weather-widget .ant-card-head-title {
+  color: #40a9ff;
+}
+
+.weather-widget p {
+  margin: 8px 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Statistics Panel */
+.stats-panel {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+  width: 300px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .stats-panel {
+  background: rgba(0, 21, 41, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.stats-panel .ant-statistic-title {
+  color: #666;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+[data-theme="dark"] .stats-panel .ant-statistic-title {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.stats-panel .ant-statistic-content {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Loading State */
+.map-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+}
+
+[data-theme="dark"] .map-loading {
+  background: rgba(0, 21, 41, 0.95);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.map-loading p {
+  margin-top: 16px;
+  color: inherit;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Directions Modal Styles */
+.directions-modal .ant-modal-content {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+}
+
+.directions-modal .ant-modal-header {
+  background: linear-gradient(135deg, #1890ff, #722ed1);
+  border-bottom: none;
+  padding: 20px 24px;
+}
+
+.directions-modal .ant-modal-title {
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.directions-modal .ant-modal-close-x {
+  color: white;
+  font-size: 18px;
+}
+
+.directions-modal .ant-modal-close-x:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.directions-modal .ant-modal-body {
+  padding: 24px;
+  background: #fff;
+}
+
+[data-theme="dark"] .directions-modal .ant-modal-body {
+  background: #1f1f1f;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Status Indicators */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status-safe {
+  background: #f6ffed;
+  color: #52c41a;
+  border: 1px solid #b7eb8f;
+}
+
+.status-warning {
+  background: #fffbe6;
+  color: #faad14;
+  border: 1px solid #ffd666;
+}
+
+.status-danger {
+  background: #fff2e8;
+  color: #fa8c16;
+  border: 1px solid #ffbb96;
+}
+
+.status-critical {
+  background: #fff1f0;
+  color: #ff4d4f;
+  border: 1px solid #ffa39e;
+}
+
+[data-theme="dark"] .status-safe {
+  background: rgba(82, 196, 26, 0.1);
+  border-color: rgba(82, 196, 26, 0.3);
+}
+
+[data-theme="dark"] .status-warning {
+  background: rgba(250, 173, 20, 0.1);
+  border-color: rgba(250, 173, 20, 0.3);
+}
+
+[data-theme="dark"] .status-danger {
+  background: rgba(250, 140, 22, 0.1);
+  border-color: rgba(250, 140, 22, 0.3);
+}
+
+[data-theme="dark"] .status-critical {
+  background: rgba(255, 77, 79, 0.1);
+  border-color: rgba(255, 77, 79, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .map-header {
+    padding: 12px 16px;
+  }
+  
+  .map-header h2 {
+    font-size: 16px;
+  }
+  
+  .weather-widget {
+    width: 200px;
+    top: 80px;
+    right: 10px;
+    padding: 12px;
+  }
+  
+  .stats-panel {
+    width: 250px;
+    bottom: 10px;
+    left: 10px;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .map-header {
+    padding: 10px 12px;
+  }
+  
+  .map-header h2 {
+    font-size: 14px;
+  }
+  
+  .weather-widget {
+    width: 180px;
+    font-size: 12px;
+  }
+  
+  .stats-panel {
+    width: 200px;
+  }
+  
+  .stats-panel .ant-statistic-content {
+    font-size: 14px;
+  }
+  
+  .directions-modal .ant-modal-body {
+    padding: 16px;
+  }
+}
+
+/* Custom Google Maps Marker Styles */
+.custom-marker {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.custom-marker:hover {
+  transform: scale(1.1);
+}
+
+.marker-water_source {
+  background: linear-gradient(135deg, #1890ff, #40a9ff);
+}
+
+.marker-health_facility {
+  background: linear-gradient(135deg, #52c41a, #73d13d);
+}
+
+.marker-outbreak {
+  background: linear-gradient(135deg, #ff4d4f, #ff7875);
+}
+
+.marker-safe_zone {
+  background: linear-gradient(135deg, #52c41a, #73d13d);
+}
+
+.marker-monitoring_station {
+  background: linear-gradient(135deg, #722ed1, #9254de);
+}
+
+.marker-treatment_plant {
+  background: linear-gradient(135deg, #1890ff, #40a9ff);
+}
