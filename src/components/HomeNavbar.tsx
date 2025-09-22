@@ -142,7 +142,7 @@ const HomeNavbar: React.FC = () => {
             <div className="water-drop"></div>
           </div>
           <div className="brand-text">
-            <span className="brand-name">Paani Care</span>
+            <span className="brand-name">Nirogya</span>
             <span className="brand-tagline">Health Surveillance</span>
           </div>
         </div>

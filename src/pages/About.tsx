@@ -54,7 +54,7 @@ const About: React.FC = () => {
     {
       year: '2023',
       title: 'Project Inception',
-      description: 'Paani Care was conceptualized to address water-borne disease surveillance gaps in rural India'
+      description: 'Nirogya was conceptualized to address water-borne disease surveillance gaps in rural India'
     },
     {
       year: '2024',
@@ -86,7 +86,7 @@ const About: React.FC = () => {
       <section className="about-hero">
         <div className="hero-content">
           <Title level={1} className="hero-title">
-            About Paani Care
+            About Nirogya
           </Title>
           <Paragraph className="hero-subtitle">
             Empowering communities through intelligent health surveillance and water quality monitoring
@@ -115,7 +115,7 @@ const About: React.FC = () => {
             <Col xs={24} lg={12}>
               <Title level={2}>Our Mission</Title>
               <Paragraph className="mission-text">
-                Paani Care is dedicated to revolutionizing public health surveillance in rural and 
+                Nirogya is dedicated to revolutionizing public health surveillance in rural and 
                 underserved communities. We combine cutting-edge technology with grassroots healthcare 
                 to create an early warning system for water-borne diseases.
               </Paragraph>
@@ -185,7 +185,7 @@ const About: React.FC = () => {
           <Title level={2} className="section-title">Meet Our Team</Title>
           <Paragraph className="team-intro">
             Our diverse team of healthcare professionals, technologists, and community advocates 
-            work together to make Paani Care a reality.
+            work together to make Nirogya a reality.
           </Paragraph>
           
           <Row gutter={[24, 24]}>
@@ -220,7 +220,7 @@ const About: React.FC = () => {
             <Col xs={24} lg={12}>
               <Title level={2}>Our Impact</Title>
               <Paragraph>
-                Since our launch, Paani Care has made significant strides in improving public health 
+                Since our launch, Nirogya has made significant strides in improving public health 
                 outcomes across rural India. Our platform has successfully:
               </Paragraph>
               <ul className="impact-list">
@@ -262,7 +262,7 @@ const About: React.FC = () => {
             <Paragraph>
               Help us build a healthier future for communities across India. Whether you're a 
               healthcare worker, technologist, or community advocate, there's a place for you 
-              in the Paani Care family.
+              in the Nirogya family.
             </Paragraph>
             <Space size="large">
               <Button type="primary" size="large" href="/contact">

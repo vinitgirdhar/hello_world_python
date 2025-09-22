@@ -86,7 +86,7 @@ const Header: React.FC<HeaderProps> = ({ collapsed, onToggleCollapse }) => {
           className="sidebar-trigger"
         />
         <div className="app-title">
-          <span className="app-name">Paani Care</span>
+          <span className="app-name">Nirogya</span>
           <span className="app-subtitle">Health Surveillance System</span>
         </div>
       </div>

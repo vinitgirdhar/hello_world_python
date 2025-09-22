@@ -88,7 +88,7 @@ const Home: React.FC = () => {
       role: "District Health Officer, Guwahati",
       image: "/images/testimonials/user1.jpg",
       rating: 5,
-      content: "Paani Care has revolutionized how we monitor water-borne diseases in our district. The early warning system helped us prevent a major cholera outbreak last month. The real-time data and community reporting features are game-changers.",
+      content: "Nirogya has revolutionized how we monitor water-borne diseases in our district. The early warning system helped us prevent a major cholera outbreak last month. The real-time data and community reporting features are game-changers.",
       location: "Assam"
     },
     {
@@ -106,7 +106,7 @@ const Home: React.FC = () => {
       role: "Village Water Committee Head",
       image: "/images/testimonials/user3.jpg",
       rating: 5,
-      content: "Our village water sources are now properly monitored thanks to Paani Care. We received an alert about contamination that saved many families from illness. The system truly protects our community.",
+      content: "Our village water sources are now properly monitored thanks to Nirogya. We received an alert about contamination that saved many families from illness. The system truly protects our community.",
       location: "Manipur"
     },
     {
@@ -115,7 +115,7 @@ const Home: React.FC = () => {
       role: "Public Health Specialist",
       image: "/images/testimonials/user4.jpg",
       rating: 5,
-      content: "The AI-powered analytics and predictive capabilities of Paani Care are impressive. We can now identify disease patterns and take preventive action before outbreaks occur. It's exactly what our region needed.",
+      content: "The AI-powered analytics and predictive capabilities of Nirogya are impressive. We can now identify disease patterns and take preventive action before outbreaks occur. It's exactly what our region needed.",
       location: "Shillong"
     }
   ];
@@ -150,7 +150,7 @@ const Home: React.FC = () => {
               <span className="badge-text">🌊 Protecting Communities Since 2025</span>
             </div>
             <Title level={1} className="hero-title">
-              {isAuthenticated ? `Welcome back, ${user?.name?.split(' ')[0]}!` : 'Paani Care'}
+              {isAuthenticated ? `Welcome back, ${user?.name?.split(' ')[0]}!` : 'Nirogya'}
             </Title>
             <Title level={2} className="hero-subtitle">
               Smart Health Surveillance & Early Warning System
@@ -334,7 +334,7 @@ const Home: React.FC = () => {
               What Our Users Say
             </Title>
             <Paragraph className="section-description">
-              Healthcare professionals and community members across the Northeast trust Paani Care to protect their communities
+              Healthcare professionals and community members across the Northeast trust Nirogya to protect their communities
             </Paragraph>
           </div>
           
@@ -445,7 +445,7 @@ const Home: React.FC = () => {
             <Paragraph className="cta-description">
               {isAuthenticated 
                 ? `Welcome back, ${user?.name}! Access your dashboard to continue monitoring health data, managing water quality reports, and protecting communities.`
-                : 'Join thousands of health workers and community members using Paani Care to monitor and prevent water-borne diseases.'
+                : 'Join thousands of health workers and community members using Nirogya to monitor and prevent water-borne diseases.'
               }
             </Paragraph>
             

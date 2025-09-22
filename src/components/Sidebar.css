@@ -117,13 +117,15 @@
   flex: 1;
 }
 
+
 .logo-text {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   color: #ffffff;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
+  letter-spacing: 0.18em;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   background: linear-gradient(135deg, #ffffff, #e3f2fd);
   -webkit-background-clip: text;
@@ -131,6 +133,13 @@
   background-clip: text;
   animation: logoFloat 4s ease-in-out infinite;
   position: relative;
+}
+
+.logo-text span {
+  padding-left: 2px;
+  padding-right: 2px;
+  font-family: inherit;
+  font-weight: 700;
 }
 
 .logo-text::after {
@@ -150,6 +159,7 @@
 
 .logo-icon {
   font-size: 30px;
+  margin-right: 8px;
   filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
   background: linear-gradient(135deg, #40a9ff, #1890ff, #096dd9);
   -webkit-background-clip: text;

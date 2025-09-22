@@ -27,7 +27,7 @@ const AIChatbot: React.FC = () => {
     {
       id: '1',
       type: 'bot',
-      content: 'Hello! I\'m your Paani Care AI assistant. I can help you with water quality monitoring, health surveillance, and disease prevention. How can I assist you today?',
+      content: 'Hello! I\'m your Nirogya AI assistant. I can help you with water quality monitoring, health surveillance, and disease prevention. How can I assist you today?',
       timestamp: new Date()
     }
   ]);
@@ -149,7 +149,7 @@ const AIChatbot: React.FC = () => {
                 className="bot-avatar"
               />
               <div className="title-text">
-                <Text strong>Paani Care AI</Text>
+                <Text strong>Nirogya AI</Text>
                 <Text type="secondary" className="status">Online • Ready to help</Text>
               </div>
             </div>

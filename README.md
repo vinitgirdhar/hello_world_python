@@ -1,170 +1,280 @@
-# 🌊 Paani Care - Water Quality Monitoring System
+# Nirogya - Smart Health Surveillance and Early Warning System# Getting Started with Create React App
 
-A comprehensive water quality monitoring and health surveillance application designed specifically for Northeast India, addressing water-borne diseases and public health challenges.
 
-## 🚀 Features
 
-### 🗺️ Interactive Mapping
-- **Real-time Water Quality Monitoring** - Track water sources across Northeast India
-- **Health Facility Mapping** - Locate nearby hospitals and health centers
-- **Disease Outbreak Tracking** - Monitor and visualize epidemic outbreaks
-- **Safe Zone Identification** - Find safe water distribution points
+A comprehensive React-based web application for monitoring water-borne diseases in vulnerable communities, particularly designed for the Northeastern Region (NER) of India.This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-### 💬 AI-Powered Assistance
-- **Multilingual Chatbot** - Support for English, Hindi, and Northeast Indian languages
-- **Symptom Analysis** - AI-driven health assessment and recommendations
-- **Emergency Response** - Quick access to health services and emergency contacts
 
-### 📊 Data Visualization
-- **Water Quality Analytics** - pH levels, turbidity, contamination tracking
-- **Health Statistics** - Disease patterns and outbreak predictions
-- **Real-time Weather Integration** - Environmental conditions affecting water quality
 
-### 🌐 Multi-language Support
-- **English** - Primary interface language
-- **Hindi** - Regional language support
-- **Northeast Indian Languages** - Local language accessibility
+## 🎯 Project Overview## Available Scripts
 
-### 🎨 Modern UI/UX
-- **Glassmorphism Design** - Modern, translucent interface elements
-- **Dark/Light Theme** - Adaptive theming for better user experience
-- **Responsive Design** - Mobile-first approach for accessibility
 
-## 🛠️ Technology Stack
 
-### Frontend
-- **React 18+** with TypeScript
-- **Ant Design** for UI components
-- **Leaflet.js** for interactive maps
-- **CSS3** with modern styling techniques
+Nirogya is a digital health platform that addresses the critical need for early detection and prevention of water-borne diseases such as diarrhea, cholera, typhoid, and hepatitis A in rural and tribal communities. The system provides real-time health surveillance, water quality monitoring, and community reporting capabilities.In the project directory, you can run:
 
-### Development Tools
-- **Create React App** - Project bootstrapping
-- **ESLint & Prettier** - Code quality and formatting
-- **Git** - Version control
 
-## 📦 Installation
+
+## ✨ Key Features### `npm start`
+
+
+
+### 1. **Health Surveillance Dashboard**Runs the app in the development mode.\
+
+- Real-time disease tracking and monitoringOpen [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+- Interactive data visualizations and charts
+
+- Disease hotspot mappingThe page will reload if you make edits.\
+
+- Resource allocation overviewYou will also see any lint errors in the console.
+
+- Weekly and historical trend analysis
+
+### `npm test`
+
+### 2. **Health Data Collection**
+
+- Comprehensive patient case reportingLaunches the test runner in the interactive watch mode.\
+
+- Symptom tracking and severity assessmentSee the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+- Disease type classification
+
+- Location-based case mapping### `npm run build`
+
+- Contact tracing capabilities
+
+Builds the app for production to the `build` folder.\
+
+### 3. **Water Quality Monitoring**It correctly bundles React in production mode and optimizes the build for the best performance.
+
+- IoT sensor data integration
+
+- Manual water test result entryThe build is minified and the filenames include the hashes.\
+
+- Real-time water source status trackingYour app is ready to be deployed!
+
+- Contamination alerts and warnings
+
+- Parameter monitoring (pH, turbidity, bacterial count, chlorine levels)See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+
+
+### 4. **Community Reporting Interface**### `npm run eject`
+
+- Multi-step symptom reporting form
+
+- User-friendly interface for community members**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+
+- Multilingual support (English, Hindi, with extensibility for tribal languages)
+
+- Family health trackingIf you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+
+- Water source information collection
+
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+
+### 5. **Multilingual Support**
+
+- English and Hindi translationsYou don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+
+- Extensible framework for tribal languages
+
+- Context-aware language switching## Learn More
+
+- Cultural sensitivity considerations
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+## 🛠 Technology Stack
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+- **Frontend**: React 19.x with TypeScript
+- **UI Framework**: Ant Design (antd)
+- **Routing**: React Router v6
+- **Data Visualization**: Recharts
+- **Internationalization**: react-i18next
+- **Styling**: CSS Modules + Ant Design theming
+
+## 📦 Installation and Setup
 
 ### Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn
-- Git
+- Node.js (v18 or higher)
+- npm or yarn package manager
 
-### Quick Start
-```bash
-# Clone the repository
-git clone https://github.com/ashwin8332/paani_care.git
-cd paani_care
+### Installation Steps
 
-# Navigate to the application directory
-cd paani-care
+1. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-# Install dependencies
-npm install
+2. **Start the development server**
+   ```bash
+   npm start
+   ```
+   The application will be available at `http://localhost:3000` (or `http://localhost:3001` if 3000 is in use)
 
-# Start the development server
-npm start
-```
+3. **Build for production**
+   ```bash
+   npm run build
+   ```
 
-The application will be available at `http://localhost:3000`
-
-## 🚀 Deployment
-
-### Build for Production
-```bash
-# Create production build
-npm run build
-
-# The build folder contains the production-ready files
-```
-
-### Environment Configuration
-Create a `.env` file in the `paani-care` directory:
-```env
-REACT_APP_API_BASE_URL=your_api_url
-REACT_APP_GOOGLE_MAPS_API_KEY=your_google_maps_key
-```
-
-## 📁 Project Structure
+## 🏗 Project Structure
 
 ```
-paani_care/
-├── paani-care/                 # Main React application
-│   ├── public/                 # Static assets
-│   │   ├── videos/            # Video assets
-│   │   └── favicon.ico        # App icon
-│   ├── src/                   # Source code
-│   │   ├── components/        # Reusable components
-│   │   │   ├── AIChatbot.tsx  # AI chatbot component
-│   │   │   ├── Header.tsx     # Navigation header
-│   │   │   ├── Footer.tsx     # Footer component
-│   │   │   └── ThemeProvider.tsx # Theme management
-│   │   ├── pages/             # Page components
-│   │   │   ├── Home.tsx       # Landing page
-│   │   │   ├── Map.tsx        # Interactive map
-│   │   │   ├── Dashboard.tsx  # Analytics dashboard
-│   │   │   └── WaterQuality.tsx # Water quality monitoring
-│   │   ├── contexts/          # React contexts
-│   │   │   ├── AuthContext.tsx # Authentication
-│   │   │   └── LanguageContext.tsx # Multi-language support
-│   │   ├── locales/           # Translation files
-│   │   │   ├── en.ts          # English translations
-│   │   │   └── hi.ts          # Hindi translations
-│   │   └── types/             # TypeScript type definitions
-│   ├── package.json           # Dependencies and scripts
-│   └── tsconfig.json          # TypeScript configuration
-├── README.md                  # Project documentation
-└── .gitignore                # Git ignore rules
+paani-care/
+├── public/
+│   ├── index.html
+│   └── favicon.ico
+├── src/
+│   ├── components/           # Reusable UI components
+│   │   ├── Header.tsx
+│   │   ├── Sidebar.tsx
+│   │   ├── Layout.tsx
+│   │   └── *.css
+│   ├── pages/               # Main application pages
+│   │   ├── Dashboard.tsx
+│   │   ├── HealthData.tsx
+│   │   ├── WaterQuality.tsx
+│   │   ├── Community.tsx
+│   │   └── *.css
+│   ├── types/               # TypeScript type definitions
+│   │   └── index.ts
+│   ├── locales/            # Internationalization files
+│   │   ├── en.ts
+│   │   ├── hi.ts
+│   │   └── index.ts
+│   ├── App.tsx
+│   ├── App.css
+│   └── index.tsx
+├── package.json
+├── tsconfig.json
+└── README.md
 ```
 
-## 🌟 Key Features
+## 🚀 Current Features Implemented
+
+### ✅ Completed Modules
+
+1. **Dashboard** - Health surveillance dashboard with data visualizations
+2. **Health Data Collection** - Patient case reporting and management
+3. **Water Quality Monitoring** - Water source tracking and testing
+4. **Community Reporting** - Multi-step symptom reporting interface
+5. **Multilingual Support** - English and Hindi language support
+6. **Responsive Design** - Mobile-friendly interface
+
+### 🚧 Future Enhancements
+
+- Alert management system
+- Educational resources module
+- Real-time IoT sensor integration
+- Mobile application
+- Advanced analytics and AI/ML predictions
+
+## 📱 Application Screenshots
+
+### Dashboard
+- Real-time statistics cards showing total cases, active cases, resolved cases
+- Interactive charts for weekly health trends and disease distribution
+- Water quality overview with contamination status
+- Recent activity timeline and hotspot analysis
+
+### Health Data Collection
+- Comprehensive patient case reporting form
+- Symptoms selection with severity assessment
+- Patient search and case management table
+- Disease type classification and tracking
 
 ### Water Quality Monitoring
-- **Real-time Data Collection** - Monitor pH levels, turbidity, and contamination
-- **Historical Trends** - Track water quality changes over time
-- **Alert System** - Notifications for dangerous water conditions
+- Water source status tracking with safety indicators
+- Parameter monitoring (pH, turbidity, bacterial count, chlorine levels)
+- Test result entry for manual and IoT sensor data
+- Water quality trends visualization
 
-### Health Surveillance
-- **Disease Mapping** - Track water-borne disease outbreaks
-- **Symptom Reporting** - Community-driven health monitoring
-- **ASHA Worker Communication** - Direct connection with health workers
+### Community Reporting
+- Step-by-step symptom reporting wizard
+- Family health tracking capabilities
+- Water source information collection
+- Prevention tips and emergency information
 
-### Emergency Response
-- **Safe Zone Location** - Find clean water during emergencies
-- **Health Facility Directory** - Locate nearby medical facilities
-- **Emergency Contacts** - Quick access to health services
+## 🌐 Internationalization
 
-## 🤝 Contributing
+The application supports multiple languages:
 
-We welcome contributions from the community! Please follow these steps:
+- **English (en)**: Default language
+- **Hindi (hi)**: Regional language support
+- **Extensible Framework**: Ready for tribal languages like Assamese, Bodo, Khasi
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+## 🎨 User Interface
 
-## 📄 License
+The application features:
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- Clean, modern design with Ant Design components
+- Intuitive navigation with collapsible sidebar
+- Data visualization with interactive charts (Recharts)
+- Form validation and user feedback
+- Consistent color scheme and typography
+- Mobile-responsive design
 
-## 👥 Team
+## 🔧 Development
 
-- **Developer**: Ashwin (@ashwin8332)
-- **Email**: anshilashwin80@gmail.com
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and uses:
 
-## 🙏 Acknowledgments
+- **TypeScript** for type safety
+- **ESLint** for code quality
+- **CSS Modules** for component styling
+- **React Router** for navigation
+- **Ant Design** for UI components
 
-- Northeast India Water Quality Monitoring Initiatives
-- Public Health Department collaborations
-- Open source community contributions
-- ASHA workers and health professionals
+## 🌟 Key Benefits
+
+1. **Early Disease Detection**: Helps identify disease outbreaks before they spread
+2. **Community Engagement**: Easy-to-use interface for community health reporting
+3. **Water Safety Monitoring**: Real-time tracking of water source contamination
+4. **Data-Driven Decisions**: Visual analytics for health officials
+5. **Multilingual Accessibility**: Supports local languages for better adoption
+6. **Mobile-First Design**: Works on smartphones in remote areas
+
+## 🎯 Target Users
+
+- **Health Workers**: For comprehensive case reporting and patient management
+- **Community Members**: For symptom reporting and health information
+- **District Health Officials**: For monitoring and decision making
+- **ASHA Workers**: For field data collection and community outreach
+- **Government Agencies**: For policy making and resource allocation
 
 ## 📞 Support
 
-For support, email anshilashwin80@gmail.com or create an issue in this repository.
+For technical support, feature requests, or contributions:
+
+- Create an issue in the project repository
+- Contact the development team
+- Check the documentation for troubleshooting
+
+## 🏆 Project Status
+
+**Current Status**: ✅ **Production Ready**
+
+- All core modules implemented and tested
+- Responsive design working across devices
+- Multilingual support functional
+- No compilation errors
+- Ready for deployment
+
+## 🚀 Deployment
+
+The application can be deployed to:
+
+- **Vercel** (recommended for React apps)
+- **Netlify** (static site hosting)
+- **AWS S3 + CloudFront** (scalable hosting)
+- **Azure Static Web Apps** (Microsoft cloud)
+- **Firebase Hosting** (Google cloud)
 
 ---
 
-**Built with ❤️ for Northeast India's water quality and public health**
+**Nirogya** - *Safeguarding Community Health Through Technology*
 
+*Built with ❤️ for the Northeastern Region communities*

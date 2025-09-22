@@ -9,7 +9,7 @@ export const en = {
     reports: 'Reports'
   },
   dashboard: {
-    title: 'Paani Care - Health Surveillance Dashboard',
+    title: 'Nirogya - Health Surveillance Dashboard',
     totalCases: 'Total Cases',
     activeCases: 'Active Cases',
     resolvedCases: 'Resolved Cases',

@@ -282,17 +282,16 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
       >
         {/* Header */}
         <div className="sidebar-header">
-          <div className="logo">
+          <div className="logo" style={{ width: '100%', justifyContent: collapsed ? 'center' : 'flex-start', display: 'flex', alignItems: 'center', minHeight: 48 }}>
             {!collapsed ? (
-              <div className="logo-text">
-                <span className="logo-icon">💧</span>
-                <span>Paani Care</span>
+              <div className="logo-text" style={{ display: 'flex', alignItems: 'center', gap: '0.05px', letterSpacing: '0.1em', fontWeight: 700, fontSize: 22 }}>
+                <span className="logo-icon" style={{ marginRight: 2 }}>💧</span>
+                <span style={{ paddingLeft: 0.1, paddingRight: 0.1, letterSpacing: '0.01em', fontFamily: 'inherit', fontWeight: 700 }}>Nirogya</span>
               </div>
             ) : (
               <span className="logo-icon-collapsed">💧</span>
             )}
           </div>
-          
           {!collapsed && (
             <div className="header-actions">
               <Tooltip title="Customize Sidebar">

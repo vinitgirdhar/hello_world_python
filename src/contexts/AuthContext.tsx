@@ -124,7 +124,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           email,
           name: userName,
           role: userRole,
-          organization: 'Paani Care NER',
+          organization: 'Nirogya NER',
           location: 'Northeast India',
           phone: '+91-9876543210',
           permissions,
@@ -170,7 +170,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.setItem('paanicare-user', JSON.stringify(newUser));
       localStorage.setItem('paanicare-token', 'mock-jwt-token');
       
-      message.success('Registration successful! Welcome to Paani Care.');
+      message.success('Registration successful! Welcome to Nirogya.');
       return true;
     } catch (error) {
       message.error('Registration failed. Please try again.');

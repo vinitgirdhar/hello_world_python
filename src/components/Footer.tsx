@@ -57,7 +57,7 @@ const Footer: React.FC = () => {
             <div className="footer-section">
               <div className="footer-logo">
                 <div className="logo-icon">💧</div>
-                <h3>Paani Care</h3>
+                <h3>Nirogya</h3>
               </div>
               <Text className="footer-description">
                 Empowering communities with advanced water quality monitoring and disease prevention through AI-powered healthcare surveillance.
@@ -207,7 +207,7 @@ const Footer: React.FC = () => {
         <Row justify="space-between" align="middle" className="footer-bottom">
           <Col xs={24} md={12}>
             <Text className="copyright">
-              © {currentYear} Paani Care. All rights reserved. Made with <HeartOutlined style={{ color: '#ff4757' }} /> for community health.
+              © {currentYear} Nirogya. All rights reserved. Made with <HeartOutlined style={{ color: '#ff4757' }} /> for community health.
             </Text>
           </Col>
           <Col xs={24} md={12} className="footer-bottom-right">
