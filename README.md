@@ -277,4 +277,5 @@ The application can be deployed to:
 
 **Nirogya** - *Safeguarding Community Health Through Technology*
 
-*Built with ❤️ for the Northeastern Region communities*
+*Built with ❤️ for the Northeastern Region communities*#   n i r  
+ 
