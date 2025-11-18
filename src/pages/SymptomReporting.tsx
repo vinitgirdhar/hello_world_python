@@ -1,3 +1,4 @@
+// src/pages/SymptomReporting.tsx
 import React, { useState } from 'react';
 import { Card, Form, Select, Input, Button, Row, Col, Typography, Space, message, Modal } from 'antd';
 import { 
@@ -10,6 +11,7 @@ import {
 } from '@ant-design/icons';
 import { useAuth } from '../contexts/AuthContext';
 import './SymptomReporting.css';
+import { postReport } from '../api/report';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -64,34 +66,63 @@ const SymptomReporting: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  // build the nested payload expected by the backend
+  const buildPatientPayload = (values: any) => {
+    const patient = {
+      patientName: values.patientName || null,
+      age: values.age !== undefined && values.age !== '' ? Number(values.age) : null,
+      gender: values.gender || null,
+      location: values.location || null,
+      contactNumber: values.contactNumber || null,
+      symptoms: Array.isArray(values.symptoms) ? values.symptoms : (values.symptoms ? [values.symptoms] : []),
+      severity: values.severity || null,
+      duration: values.duration || null,
+      additionalInfo: values.additionalInfo || null,
+      reportedBy: user?.name || values.reportedBy || 'Anonymous'
+    };
+
+    const meta = {
+      submitted_at: new Date().toISOString(),
+      type: "symptom_report",
+      // you can add more meta fields here, e.g. reporter_id, device, etc.
+    };
+
+    return { patient, meta };
+  };
+
   const handleSubmit = async (values: any) => {
     setLoading(true);
-    
+
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      // create structured payload and send to backend
+      const { patient, meta } = buildPatientPayload(values);
+      const payload = { patient, meta };
+
+      console.debug("Submitting symptom payload:", payload);
+
+      const res = await postReport(payload); // postReport posts to http://localhost:8000/report
+
+      console.debug("Backend response:", res);
+
+      // show success and possible emergency modal
       const reportData: SymptomReport = {
         ...values,
-        reportedBy: user?.name || 'Anonymous',
+        reportedBy: patient.reportedBy,
         urgentHelp: values.severity === 'critical' || values.severity === 'severe'
       };
 
-      console.log('Symptom Report:', reportData);
-      
-      // Show success message
       message.success('Symptom report submitted successfully!');
-      
-      // If urgent, show modal with emergency contacts
+
       if (reportData.urgentHelp) {
         showEmergencyModal();
       }
-      
+
       setSubmitted(true);
       form.resetFields();
-      
-    } catch (error) {
-      message.error('Failed to submit report. Please try again.');
+
+    } catch (error: any) {
+      console.error('Failed to submit report:', error);
+      message.error(error?.message || 'Failed to submit report. Please try again.');
     } finally {
       setLoading(false);
     }

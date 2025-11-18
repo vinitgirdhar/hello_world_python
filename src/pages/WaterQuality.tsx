@@ -1,109 +1,246 @@
-import React, { useState } from 'react';
-import { 
-  Card, 
-  Table, 
-  Tag, 
-  Button, 
-  Space, 
-  Modal, 
-  Form, 
-  Input, 
-  InputNumber, 
-  Select, 
-  Row, 
+// WaterQuality.tsx
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import {
+  Card,
+  Table,
+  Tag,
+  Button,
+  Space,
+  Modal,
+  Form,
+  Input,
+  InputNumber,
+  Select,
+  Row,
   Col,
   Statistic,
   Progress,
   message,
   Switch
 } from 'antd';
-import { 
-  PlusOutlined, 
-  SyncOutlined, 
+import {
+  PlusOutlined,
+  SyncOutlined,
   ExperimentOutlined,
   AlertOutlined,
   CheckCircleOutlined,
   ExclamationCircleOutlined
 } from '@ant-design/icons';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
+} from 'recharts';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../components/ThemeProvider';
 import type { ColumnsType } from 'antd/es/table';
-import { WaterQualityData } from '../types';
 import './WaterQuality.css';
 
 const { Option } = Select;
 const { TextArea } = Input;
 
-// Mock data
-const waterSources: WaterQualityData[] = [
-  {
-    id: '1',
-    sourceId: 'WS001',
-    sourceName: 'Main Well - Village A',
-    location: { lat: 26.1445, lng: 91.7362, address: 'Village A, Assam' },
-    parameters: {
-      turbidity: 8.5,
-      pH: 6.2,
-      bacterialCount: 150,
-      chlorine: 0.3,
-      temperature: 28
-    },
-    status: 'contaminated',
-    timestamp: new Date('2024-01-15T10:30:00'),
-    testedBy: 'IoT Sensor'
-  },
-  {
-    id: '2',
-    sourceId: 'WS002',
-    sourceName: 'Tube Well - Village B',
-    location: { lat: 26.1545, lng: 91.7462, address: 'Village B, Assam' },
-    parameters: {
-      turbidity: 3.2,
-      pH: 7.1,
-      bacterialCount: 45,
-      chlorine: 0.8,
-      temperature: 26
-    },
-    status: 'warning',
-    timestamp: new Date('2024-01-15T09:15:00'),
-    testedBy: 'Manual Test'
-  },
-  {
-    id: '3',
-    sourceId: 'WS003',
-    sourceName: 'Hand Pump - Village C',
-    location: { lat: 26.1345, lng: 91.7262, address: 'Village C, Assam' },
-    parameters: {
-      turbidity: 1.8,
-      pH: 7.4,
-      bacterialCount: 15,
-      chlorine: 1.2,
-      temperature: 25
-    },
-    status: 'safe',
-    timestamp: new Date('2024-01-15T08:00:00'),
-    testedBy: 'Manual Test'
-  }
-];
+type WaterQualityData = {
+  id: string;
+  sourceId: string;
+  sourceName: string;
+  location: { lat: number; lng: number; address: string };
+  parameters: {
+    turbidity: number;
+    pH: number;
+    bacterialCount: number;
+    chlorine: number;
+    temperature: number;
+    tds?: number;
+    fluoride?: number;
+    nitrate?: number;
+    coliform?: number;
+  };
+  status: 'safe' | 'warning' | 'contaminated';
+  timestamp: Date | string;
+  testedBy: string;
+};
 
-// Mock trend data
-const trendData = [
-  { time: '00:00', pH: 7.2, turbidity: 2.1, bacterial: 20 },
-  { time: '04:00', pH: 7.1, turbidity: 2.5, bacterial: 25 },
-  { time: '08:00', pH: 6.9, turbidity: 3.2, bacterial: 35 },
-  { time: '12:00', pH: 6.8, turbidity: 4.1, bacterial: 45 },
-  { time: '16:00', pH: 6.5, turbidity: 5.8, bacterial: 65 },
-  { time: '20:00', pH: 6.2, turbidity: 7.2, bacterial: 85 },
-];
+const BACKEND_BASE = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
+
+/**
+ * Rule-based water quality status
+ */
+const computeStatus = (vals: { pH: number; turbidity: number; bacterialCount: number; chlorine?: number }) => {
+  const { pH, turbidity, bacterialCount, chlorine } = vals;
+
+  const phVal = typeof pH === 'number' ? pH : NaN;
+  const turbVal = typeof turbidity === 'number' ? turbidity : NaN;
+  const bacVal = typeof bacterialCount === 'number' ? bacterialCount : NaN;
+
+  // Critical contaminated rules
+  if (!Number.isNaN(bacVal) && bacVal > 100) return 'contaminated';
+  if (!Number.isNaN(turbVal) && turbVal > 5) return 'contaminated';
+  if (!Number.isNaN(phVal) && (phVal < 6.0 || phVal > 9.0)) return 'contaminated';
+
+  // Warning rules
+  if (!Number.isNaN(bacVal) && bacVal > 50) return 'warning';
+  if (!Number.isNaN(turbVal) && turbVal > 3) return 'warning';
+  if (!Number.isNaN(phVal) && (phVal < 6.5 || phVal > 8.5)) return 'warning';
+  if (typeof chlorine === 'number' && chlorine < 0.1) return 'warning';
+
+  return 'safe';
+};
+
+/**
+ * buildTrendFromReports: convert backend water_reports to hourly averaged trend
+ */
+function buildTrendFromReports(reports: any[]) {
+  const rows = (reports || []).map((r: any) => {
+    const tsRaw = r.meta?.received_at ?? r.created_at ?? r.timestamp ?? r.meta?.submitted_at;
+    const ts = tsRaw ? new Date(tsRaw) : new Date();
+    const pH = Number(r.pH ?? r.ph ?? r.parameters?.pH ?? 0);
+    const turbidity = Number(r.turbidity ?? r.parameters?.turbidity ?? 0);
+    const bacterial = Number(r.coliform ?? r.parameters?.bacterialCount ?? r.bacterialCount ?? 0);
+    return { ts, pH: isFinite(pH) ? pH : 0, turbidity: isFinite(turbidity) ? turbidity : 0, bacterial: isFinite(bacterial) ? bacterial : 0 };
+  });
+
+  const now = new Date();
+  const since = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+  const recent = rows.filter(r => r.ts >= since && r.ts <= now);
+
+  if (recent.length === 0) return [];
+
+  const buckets: Record<string, { pHSum: number; turbSum: number; bacSum: number; count: number; hourDate: Date }> = {};
+
+  recent.forEach(r => {
+    const d = r.ts;
+    const hourDate = new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), 0, 0);
+    const hourKey = hourDate.toISOString();
+    if (!buckets[hourKey]) buckets[hourKey] = { pHSum: 0, turbSum: 0, bacSum: 0, count: 0, hourDate: new Date(hourDate) };
+    buckets[hourKey].pHSum += r.pH;
+    buckets[hourKey].turbSum += r.turbidity;
+    buckets[hourKey].bacSum += r.bacterial;
+    buckets[hourKey].count += 1;
+  });
+
+  const sorted = Object.values(buckets).sort((a, b) => a.hourDate.getTime() - b.hourDate.getTime());
+
+  const trend = sorted.map(b => ({
+    time: b.hourDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    pH: +(b.pHSum / b.count).toFixed(2),
+    turbidity: +(b.turbSum / b.count).toFixed(2),
+    bacterial: Math.round(b.bacSum / b.count)
+  }));
+
+  return trend;
+}
 
 const WaterQuality: React.FC = () => {
   const { t } = useTranslation();
   const { isDark } = useTheme();
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [sources, setSources] = useState<WaterQualityData[]>(waterSources);
+  const [sources, setSources] = useState<WaterQualityData[]>([]);
   const [autoRefresh, setAutoRefresh] = useState(true);
+  const [chartTrend, setChartTrend] = useState<Array<{ time: string; pH: number; turbidity: number; bacterial: number }>>([]);
+  const autoRefreshRef = useRef<number | null>(null);
+
+  const fetchWaterReports = useCallback(async () => {
+    try {
+      const res = await fetch(`${BACKEND_BASE}/water_reports`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      const mapped: WaterQualityData[] = (data || []).map((w: any, idx: number) => {
+        const pH = Number(w.pH ?? w.ph ?? 0);
+        const turbidity = Number(w.turbidity ?? 0);
+        const bacterialCount = Number(w.coliform ?? w.bacterialCount ?? 0);
+        const status = computeStatus({ pH, turbidity, bacterialCount, chlorine: Number(w.chlorine ?? 0) });
+
+        return {
+          id: String(w._id ?? idx),
+          sourceId: w.report_id ?? String(w._id ?? `WS${idx}`),
+          sourceName: String(w.primary_water_source ?? `Source ${idx + 1}`),
+          location: { lat: 0, lng: 0, address: String(w.location ?? w.village ?? 'Unknown') },
+          parameters: {
+            turbidity,
+            pH,
+            bacterialCount,
+            chlorine: Number(w.chlorine ?? 0),
+            temperature: Number(w.temperature ?? 0),
+            tds: Number(w.tds ?? 0),
+            fluoride: Number(w.fluoride ?? 0),
+            nitrate: Number(w.nitrate ?? 0),
+            coliform: Number(w.coliform ?? 0)
+          },
+          status,
+          timestamp: w.meta?.received_at ?? w.created_at ?? new Date().toISOString(),
+          testedBy: w.testedBy ?? 'Unknown'
+        };
+      });
+
+      setSources(mapped);
+
+      // build chart trend from raw backend docs
+      const trend = buildTrendFromReports(data || []);
+      setChartTrend(trend);
+    } catch (err) {
+      console.error('fetchWaterReports error', err);
+      message.error('Failed to fetch water reports from backend');
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchWaterReports();
+
+    if (autoRefresh) {
+      autoRefreshRef.current = window.setInterval(() => {
+        fetchWaterReports();
+      }, 6000);
+    } else if (autoRefreshRef.current) {
+      window.clearInterval(autoRefreshRef.current);
+      autoRefreshRef.current = null;
+    }
+
+    return () => {
+      if (autoRefreshRef.current) {
+        window.clearInterval(autoRefreshRef.current);
+        autoRefreshRef.current = null;
+      }
+    };
+  }, [autoRefresh, fetchWaterReports]);
+
+  // hoisted function declaration so columns can use it safely anywhere
+  function viewDetails(source: WaterQualityData) {
+    Modal.info({
+      title: `Water Quality Details - ${source.sourceName}`,
+      content: (
+        <div className="water-details">
+          <Row gutter={[16, 16]}>
+            <Col span={12}>
+              <Statistic title="pH Level" value={source.parameters.pH} precision={1} />
+            </Col>
+            <Col span={12}>
+              <Statistic title="Turbidity" value={source.parameters.turbidity} suffix="NTU" precision={1} />
+            </Col>
+            <Col span={12}>
+              <Statistic title="Bacterial Count" value={source.parameters.bacterialCount} suffix="CFU/ml" />
+            </Col>
+            <Col span={12}>
+              <Statistic title="Chlorine" value={source.parameters.chlorine} suffix="mg/L" precision={1} />
+            </Col>
+          </Row>
+          <div style={{ marginTop: 16 }}>
+            <p><strong>Location:</strong> {source.location.address}</p>
+            <p><strong>Tested By:</strong> {source.testedBy}</p>
+            <p><strong>Test Date:</strong> {new Date(source.timestamp).toLocaleString()}</p>
+            <p><strong>Status:</strong> <Tag color={source.status === 'safe' ? 'green' : source.status === 'warning' ? 'orange' : 'red'}>{source.status.toUpperCase()}</Tag></p>
+          </div>
+        </div>
+      ),
+      width: 600,
+    });
+  }
 
   const columns: ColumnsType<WaterQualityData> = [
     {
@@ -138,7 +275,7 @@ const WaterQuality: React.FC = () => {
       dataIndex: 'parameters',
       key: 'turbidity',
       render: (params: any) => (
-        <span className={params.turbidity <= 5 ? 'param-safe' : 'param-danger'}>
+        <span className={params.turbidity <= 3 ? 'param-safe' : params.turbidity <= 5 ? 'param-warning' : 'param-danger'}>
           {params.turbidity}
         </span>
       ),
@@ -148,7 +285,7 @@ const WaterQuality: React.FC = () => {
       dataIndex: 'parameters',
       key: 'bacterialCount',
       render: (params: any) => (
-        <span className={params.bacterialCount <= 50 ? 'param-safe' : 'param-danger'}>
+        <span className={params.bacterialCount <= 50 ? 'param-safe' : params.bacterialCount <= 100 ? 'param-warning' : 'param-danger'}>
           {params.bacterialCount} CFU/ml
         </span>
       ),
@@ -158,13 +295,10 @@ const WaterQuality: React.FC = () => {
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => (
-        <Tag 
-          color={
-            status === 'safe' ? 'green' : 
-            status === 'warning' ? 'orange' : 'red'
-          }
+        <Tag
+          color={status === 'safe' ? 'green' : status === 'warning' ? 'orange' : 'red'}
           icon={
-            status === 'safe' ? <CheckCircleOutlined /> : 
+            status === 'safe' ? <CheckCircleOutlined /> :
             status === 'warning' ? <ExclamationCircleOutlined /> : <AlertOutlined />
           }
         >
@@ -176,20 +310,23 @@ const WaterQuality: React.FC = () => {
       title: 'Last Tested',
       dataIndex: 'timestamp',
       key: 'timestamp',
-      render: (date: Date) => (
-        <div>
-          <div>{new Date(date).toLocaleDateString()}</div>
-          <div className="test-time">{new Date(date).toLocaleTimeString()}</div>
-        </div>
-      ),
+      render: (date: any) => {
+        const d = new Date(date);
+        return (
+          <div>
+            <div>{d.toLocaleDateString()}</div>
+            <div className="test-time">{d.toLocaleTimeString()}</div>
+          </div>
+        );
+      }
     },
     {
       title: 'Actions',
       key: 'actions',
       render: (_, record) => (
         <Space size="middle">
-          <Button 
-            type="text" 
+          <Button
+            type="text"
             icon={<ExperimentOutlined />}
             onClick={() => viewDetails(record)}
           >
@@ -205,86 +342,41 @@ const WaterQuality: React.FC = () => {
     setIsModalVisible(true);
   };
 
-  const viewDetails = (source: WaterQualityData) => {
-    Modal.info({
-      title: `Water Quality Details - ${source.sourceName}`,
-      content: (
-        <div className="water-details">
-          <Row gutter={[16, 16]}>
-            <Col span={12}>
-              <Statistic title="pH Level" value={source.parameters.pH} precision={1} />
-            </Col>
-            <Col span={12}>
-              <Statistic title="Turbidity" value={source.parameters.turbidity} suffix="NTU" precision={1} />
-            </Col>
-            <Col span={12}>
-              <Statistic title="Bacterial Count" value={source.parameters.bacterialCount} suffix="CFU/ml" />
-            </Col>
-            <Col span={12}>
-              <Statistic title="Chlorine" value={source.parameters.chlorine} suffix="mg/L" precision={1} />
-            </Col>
-          </Row>
-          <div style={{ marginTop: 16 }}>
-            <p><strong>Location:</strong> {source.location.address}</p>
-            <p><strong>Tested By:</strong> {source.testedBy}</p>
-            <p><strong>Test Date:</strong> {new Date(source.timestamp).toLocaleString()}</p>
-          </div>
-        </div>
-      ),
-      width: 600,
-    });
-  };
-
-  const handleSubmit = (values: any) => {
-    const newSource: WaterQualityData = {
-      id: Date.now().toString(),
-      sourceId: `WS${Date.now().toString().slice(-3)}`,
-      sourceName: values.sourceName,
-      location: {
-        lat: 26.1445,
-        lng: 91.7362,
-        address: values.location
-      },
-      parameters: {
-        turbidity: values.turbidity,
-        pH: values.pH,
-        bacterialCount: values.bacterialCount,
-        chlorine: values.chlorine,
-        temperature: values.temperature
-      },
-      status: getWaterStatus(values),
-      timestamp: new Date(),
-      testedBy: values.testedBy || 'Manual Test'
+  const handleSubmit = async (values: any) => {
+    const payload = {
+      location: values.location,
+      pH: values.pH,
+      turbidity: values.turbidity,
+      tds: values.tds ?? 0,
+      chlorine: values.chlorine,
+      fluoride: values.fluoride ?? 0,
+      nitrate: values.nitrate ?? 0,
+      coliform: values.bacterialCount,
+      temperature: values.temperature,
+      primary_water_source: values.sourceType || 'Manual Test',
+      district: values.district || ''
     };
-
-    setSources([newSource, ...sources]);
-    setIsModalVisible(false);
-    form.resetFields();
-    message.success('Water test result added successfully');
-  };
-
-  const getWaterStatus = (values: any): 'safe' | 'warning' | 'contaminated' => {
-    const { pH, turbidity, bacterialCount } = values;
-    
-    if (pH < 6.5 || pH > 8.5 || turbidity > 5 || bacterialCount > 100) {
-      return 'contaminated';
-    } else if (pH < 7 || pH > 8 || turbidity > 3 || bacterialCount > 50) {
-      return 'warning';
+    try {
+      const res = await fetch(`${BACKEND_BASE}/report`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      message.success('Water test result added and sent to backend');
+      setIsModalVisible(false);
+      form.resetFields();
+      fetchWaterReports();
+    } catch (err) {
+      console.error(err);
+      message.error('Failed to send test result to backend');
     }
-    return 'safe';
   };
 
-  const handleCancel = () => {
-    setIsModalVisible(false);
-    form.resetFields();
-  };
-
-  const refreshData = () => {
+  const refreshData = async () => {
     message.loading('Refreshing water quality data...', 1);
-    // Simulate data refresh
-    setTimeout(() => {
-      message.success('Data refreshed successfully');
-    }, 1000);
+    await fetchWaterReports();
+    message.success('Data refreshed successfully');
   };
 
   const safeCount = sources.filter(s => s.status === 'safe').length;
@@ -301,21 +393,21 @@ const WaterQuality: React.FC = () => {
         <Space>
           <div className="auto-refresh">
             <span>Auto Refresh:</span>
-            <Switch 
-              checked={autoRefresh} 
+            <Switch
+              checked={autoRefresh}
               onChange={setAutoRefresh}
               size="small"
             />
           </div>
-          <Button 
-            icon={<SyncOutlined />} 
+          <Button
+            icon={<SyncOutlined />}
             onClick={refreshData}
           >
             Refresh
           </Button>
-          <Button 
-            type="primary" 
-            icon={<PlusOutlined />} 
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
             onClick={showModal}
             size="large"
           >
@@ -334,8 +426,8 @@ const WaterQuality: React.FC = () => {
               prefix={<CheckCircleOutlined />}
               valueStyle={{ color: '#52c41a' }}
             />
-            <Progress 
-              percent={Math.round((safeCount / sources.length) * 100)} 
+            <Progress
+              percent={sources.length ? Math.round((safeCount / sources.length) * 100) : 0}
               strokeColor="#52c41a"
               showInfo={false}
             />
@@ -349,8 +441,8 @@ const WaterQuality: React.FC = () => {
               prefix={<ExclamationCircleOutlined />}
               valueStyle={{ color: '#faad14' }}
             />
-            <Progress 
-              percent={Math.round((warningCount / sources.length) * 100)} 
+            <Progress
+              percent={sources.length ? Math.round((warningCount / sources.length) * 100) : 0}
               strokeColor="#faad14"
               showInfo={false}
             />
@@ -364,8 +456,8 @@ const WaterQuality: React.FC = () => {
               prefix={<AlertOutlined />}
               valueStyle={{ color: '#f5222d' }}
             />
-            <Progress 
-              percent={Math.round((contaminatedCount / sources.length) * 100)} 
+            <Progress
+              percent={sources.length ? Math.round((contaminatedCount / sources.length) * 100) : 0}
               strokeColor="#f5222d"
               showInfo={false}
             />
@@ -378,21 +470,28 @@ const WaterQuality: React.FC = () => {
         <Col span={24}>
           <Card title="Water Quality Trends (24 Hours)" className="chart-card">
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={trendData}>
-                <CartesianGrid 
-                  strokeDasharray="3 3" 
-                  stroke={isDark ? '#434343' : '#f0f0f0'} 
+              <LineChart data={chartTrend.length ? chartTrend : [
+                { time: '00:00', pH: 7.2, turbidity: 2.1, bacterial: 20 },
+                { time: '04:00', pH: 7.1, turbidity: 2.5, bacterial: 25 },
+                { time: '08:00', pH: 6.9, turbidity: 3.2, bacterial: 35 },
+                { time: '12:00', pH: 6.8, turbidity: 4.1, bacterial: 45 },
+                { time: '16:00', pH: 6.5, turbidity: 5.8, bacterial: 65 },
+                { time: '20:00', pH: 6.2, turbidity: 7.2, bacterial: 85 },
+              ]}>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke={isDark ? '#434343' : '#f0f0f0'}
                 />
-                <XAxis 
-                  dataKey="time" 
+                <XAxis
+                  dataKey="time"
                   tick={{ fill: isDark ? '#f0f0f0' : '#666' }}
                   axisLine={{ stroke: isDark ? '#434343' : '#d9d9d9' }}
                 />
-                <YAxis 
+                <YAxis
                   tick={{ fill: isDark ? '#f0f0f0' : '#666' }}
                   axisLine={{ stroke: isDark ? '#434343' : '#d9d9d9' }}
                 />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{
                     backgroundColor: isDark ? '#1f1f1f' : '#fff',
                     border: `1px solid ${isDark ? '#434343' : '#d9d9d9'}`,
@@ -412,8 +511,8 @@ const WaterQuality: React.FC = () => {
 
       {/* Water Sources Table */}
       <Card title="Water Sources">
-        <Table 
-          columns={columns} 
+        <Table
+          columns={columns}
           dataSource={sources}
           rowKey="id"
           pagination={{
@@ -429,7 +528,7 @@ const WaterQuality: React.FC = () => {
       <Modal
         title={t('water.addTest')}
         open={isModalVisible}
-        onCancel={handleCancel}
+        onCancel={() => { setIsModalVisible(false); form.resetFields(); }}
         footer={null}
         width={800}
       >
@@ -466,8 +565,8 @@ const WaterQuality: React.FC = () => {
                 name="pH"
                 rules={[{ required: true, message: 'Please enter pH level' }]}
               >
-                <InputNumber 
-                  placeholder="6.5 - 8.5" 
+                <InputNumber
+                  placeholder="6.5 - 8.5"
                   style={{ width: '100%' }}
                   min={0}
                   max={14}
@@ -481,8 +580,8 @@ const WaterQuality: React.FC = () => {
                 name="turbidity"
                 rules={[{ required: true, message: 'Please enter turbidity' }]}
               >
-                <InputNumber 
-                  placeholder="NTU" 
+                <InputNumber
+                  placeholder="NTU"
                   style={{ width: '100%' }}
                   min={0}
                   step={0.1}
@@ -495,8 +594,8 @@ const WaterQuality: React.FC = () => {
                 name="bacterialCount"
                 rules={[{ required: true, message: 'Please enter bacterial count' }]}
               >
-                <InputNumber 
-                  placeholder="CFU/ml" 
+                <InputNumber
+                  placeholder="CFU/ml"
                   style={{ width: '100%' }}
                   min={0}
                 />
@@ -511,8 +610,8 @@ const WaterQuality: React.FC = () => {
                 name="chlorine"
                 rules={[{ required: true, message: 'Please enter chlorine level' }]}
               >
-                <InputNumber 
-                  placeholder="mg/L" 
+                <InputNumber
+                  placeholder="mg/L"
                   style={{ width: '100%' }}
                   min={0}
                   step={0.1}
@@ -525,8 +624,8 @@ const WaterQuality: React.FC = () => {
                 name="temperature"
                 rules={[{ required: true, message: 'Please enter temperature' }]}
               >
-                <InputNumber 
-                  placeholder="°C" 
+                <InputNumber
+                  placeholder="°C"
                   style={{ width: '100%' }}
                   min={0}
                   max={50}
@@ -536,12 +635,12 @@ const WaterQuality: React.FC = () => {
             <Col xs={24} sm={8}>
               <Form.Item
                 label="Test Method"
-                name="testMethod"
+                name="sourceType"
               >
                 <Select placeholder="Select test method">
-                  <Option value="manual">Manual Test Kit</Option>
-                  <Option value="iot_sensor">IoT Sensor</Option>
-                  <Option value="laboratory">Laboratory Analysis</Option>
+                  <Option value="Manual Test">Manual Test Kit</Option>
+                  <Option value="IoT Sensor">IoT Sensor</Option>
+                  <Option value="Laboratory">Laboratory Analysis</Option>
                 </Select>
               </Form.Item>
             </Col>
@@ -555,11 +654,18 @@ const WaterQuality: React.FC = () => {
           </Form.Item>
 
           <Form.Item
+            label="District"
+            name="district"
+          >
+            <Input placeholder="District name (used for model matching)" />
+          </Form.Item>
+
+          <Form.Item
             label="Additional Notes"
             name="notes"
           >
-            <TextArea 
-              rows={3} 
+            <TextArea
+              rows={3}
               placeholder="Any additional observations or notes"
             />
           </Form.Item>
@@ -569,7 +675,7 @@ const WaterQuality: React.FC = () => {
               <Button type="primary" htmlType="submit">
                 Add Test Result
               </Button>
-              <Button onClick={handleCancel}>
+              <Button onClick={() => { setIsModalVisible(false); form.resetFields(); }}>
                 {t('common.cancel')}
               </Button>
             </Space>

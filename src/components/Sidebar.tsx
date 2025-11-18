@@ -167,7 +167,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
     {
       key: '/ai-prediction',
       icon: <RobotOutlined />,
-      label: 'AI Prediction',
+      label: 'Report Water Quality',
       badge: 0,
     },
     {

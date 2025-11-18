@@ -145,9 +145,7 @@ const Register: React.FC = () => {
                 className="register-select"
               >
                 <Option value="community_user">🏘️ Community User</Option>
-                <Option value="volunteer">🤝 Volunteer</Option>
                 <Option value="asha_worker">👩‍⚕️ ASHA Worker</Option>
-                <Option value="healthcare_worker">🏥 Healthcare Worker</Option>
                 <Option value="district_health_official">🏛️ District Health Official</Option>
                 <Option value="government_body">🏢 Government Body</Option>
                 <Option value="admin">⚙️ Administrator</Option>

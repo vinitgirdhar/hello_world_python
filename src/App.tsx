@@ -22,7 +22,11 @@ import Gallery from './pages/Gallery';
 import News from './pages/News';
 import DiseaseMapping from './pages/DiseaseMapping';
 import ASHACommunication from './pages/ASHACommunication';
-import WaterQualityPrediction from './pages/WaterQualityPrediction';
+import WaterQualityPrediction from './pages/ReportWaterQuality';
+
+// ⭐ NEW IMPORT — this is the correct page for /report-symptoms
+import SymptomReporting from './pages/SymptomReporting';
+
 import './App.css';
 import './locales';
 
@@ -32,118 +36,142 @@ function App() {
       <ThemeProvider>
         <LanguageProvider>
           <Router>
-          <Routes>
-            {/* Public pages with special layouts */}
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            
-            {/* Public pages with navbar and chatbot */}
-            <Route path="/about" element={
-              <PublicLayout>
-                <About />
-              </PublicLayout>
-            } />
-            <Route path="/contact" element={
-              <PublicLayout>
-                <Contact />
-              </PublicLayout>
-            } />
-            <Route path="/map" element={
-              <PublicLayout>
-                <Map />
-              </PublicLayout>
-            } />
-            <Route path="/gallery" element={
-              <PublicLayout>
-                <Gallery />
-              </PublicLayout>
-            } />
-            <Route path="/news" element={
-              <PublicLayout>
-                <News />
-              </PublicLayout>
-            } />
-            <Route path="/community" element={
-              <ProtectedRoute>
-                <Layout type="dashboard">
-                  <CommunityChat />
-                </Layout>
-              </ProtectedRoute>
-            } />
-            <Route path="/report-symptoms" element={
-              <PublicLayout>
-                <Community />
-              </PublicLayout>
-            } />
-            <Route path="/disease-mapping" element={
-              <ProtectedRoute requiredRole={["healthcare_worker", "asha_worker", "district_health_official", "government_body"]}>
-                <Layout type="dashboard">
-                  <DiseaseMapping />
-                </Layout>
-              </ProtectedRoute>
-            } />
-            <Route path="/asha-communication" element={
-              <ProtectedRoute requiredRole={["healthcare_worker", "asha_worker", "district_health_official", "government_body"]}>
-                <Layout type="dashboard">
-                  <ASHACommunication />
-                </Layout>
-              </ProtectedRoute>
-            } />
-            <Route path="/ai-prediction" element={
-              <ProtectedRoute requiredRole={["healthcare_worker", "asha_worker", "district_health_official", "government_body", "volunteer"]}>
-                <Layout type="dashboard">
-                  <WaterQualityPrediction />
-                </Layout>
-              </ProtectedRoute>
-            } />
-            
-            {/* Protected dashboard pages */}
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <Layout type="dashboard">
-                  <Dashboard />
-                </Layout>
-              </ProtectedRoute>
-            } />
-            <Route path="/health" element={
-              <ProtectedRoute requiredRole="health_worker">
-                <Layout type="dashboard">
-                  <HealthData />
-                </Layout>
-              </ProtectedRoute>
-            } />
-            <Route path="/water-quality" element={
-              <ProtectedRoute>
-                <Layout type="dashboard">
-                  <WaterQuality />
-                </Layout>
-              </ProtectedRoute>
-            } />
-            
-            {/* Other protected pages */}
-            <Route path="/alerts" element={
-              <ProtectedRoute>
-                <Layout type="dashboard">
-                  <div>Alerts Page (Coming Soon)</div>
-                </Layout>
-              </ProtectedRoute>
-            } />
-            <Route path="/education" element={
-              <PublicLayout>
-                <div>Education Page (Coming Soon)</div>
-              </PublicLayout>
-            } />
-            <Route path="/reports" element={
-              <ProtectedRoute requiredRole="admin">
-                <Layout type="dashboard">
-                  <div>Reports Page (Coming Soon)</div>
-                </Layout>
-              </ProtectedRoute>
-            } />
-          </Routes>
-        </Router>
+            <Routes>
+
+              {/* Public pages */}
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+
+              {/* Public pages with layout */}
+              <Route path="/about" element={
+                <PublicLayout>
+                  <About />
+                </PublicLayout>
+              } />
+
+              <Route path="/contact" element={
+                <PublicLayout>
+                  <Contact />
+                </PublicLayout>
+              } />
+
+              <Route path="/map" element={
+                <PublicLayout>
+                  <Map />
+                </PublicLayout>
+              } />
+
+              <Route path="/gallery" element={
+                <PublicLayout>
+                  <Gallery />
+                </PublicLayout>
+              } />
+
+              <Route path="/news" element={
+                <PublicLayout>
+                  <News />
+                </PublicLayout>
+              } />
+
+              {/* Community Chat */}
+              <Route path="/community" element={
+                <ProtectedRoute>
+                  <Layout type="dashboard">
+                    <CommunityChat />
+                  </Layout>
+                </ProtectedRoute>
+              } />
+
+              {/* ⭐ FIXED ROUTE — shows SymptomReporting */}
+              <Route path="/report-symptoms" element={
+                <PublicLayout>
+                  <SymptomReporting />
+                </PublicLayout>
+              } />
+
+              {/* Disease Mapping */}
+              <Route path="/disease-mapping" element={
+                <ProtectedRoute requiredRole={["healthcare_worker", "asha_worker", "district_health_official", "government_body"]}>
+                  <Layout type="dashboard">
+                    <DiseaseMapping />
+                  </Layout>
+                </ProtectedRoute>
+              } />
+
+              {/* ASHA Communication */}
+              <Route path="/asha-communication" element={
+                <ProtectedRoute requiredRole={["healthcare_worker", "asha_worker", "district_health_official", "government_body"]}>
+                  <Layout type="dashboard">
+                    <ASHACommunication />
+                  </Layout>
+                </ProtectedRoute>
+              } />
+
+              {/* AI Water Prediction */}
+              <Route path="/ai-prediction" element={
+                <ProtectedRoute requiredRole={["healthcare_worker", "asha_worker", "district_health_official", "government_body", "volunteer"]}>
+                  <Layout type="dashboard">
+                    <WaterQualityPrediction />
+                  </Layout>
+                </ProtectedRoute>
+              } />
+
+              {/* Dashboard */}
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <Layout type="dashboard">
+                    <Dashboard />
+                  </Layout>
+                </ProtectedRoute>
+              } />
+
+              {/* Health Worker Data */}
+              <Route path="/health" element={
+                <ProtectedRoute requiredRole="health_worker">
+                  <Layout type="dashboard">
+                    <HealthData />
+                  </Layout>
+                </ProtectedRoute>
+              } />
+
+              {/* Water Quality */}
+              <Route path="/water-quality" element={
+                <ProtectedRoute>
+                  <Layout type="dashboard">
+                    <WaterQuality />
+                  </Layout>
+                </ProtectedRoute>
+              } />
+
+              {/* Alerts */}
+              <Route path="/alerts" element={
+                <ProtectedRoute>
+                  <Layout type="dashboard">
+                    <div>Alerts Page (Coming Soon)</div>
+                  </Layout>
+                </ProtectedRoute>
+              } />
+
+              {/* Education */}
+              <Route path="/education" element={
+                <PublicLayout>
+                  <div>Education Page (Coming Soon)</div>
+                </PublicLayout>
+              } />
+
+              {/* Admin Reports */}
+              <Route path="/reports" element={
+                <ProtectedRoute requiredRole="admin">
+                  <Layout type="dashboard">
+                    <div>Reports Page (Coming Soon)</div>
+                  </Layout>
+                </ProtectedRoute>
+              } />
+
+            </Routes>
+          </Router>
         </LanguageProvider>
       </ThemeProvider>
     </AuthProvider>
