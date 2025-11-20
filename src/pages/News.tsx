@@ -1,423 +1,486 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, Row, Col, Button, Select, Input, Tag, Typography, Space, Spin, Avatar } from 'antd';
-import { 
-  GlobalOutlined, 
-  ReloadOutlined, 
-  SearchOutlined,
-  CalendarOutlined,
-  UserOutlined,
-  LinkOutlined,
-  ExclamationCircleOutlined,
-  FireOutlined,
-  ClockCircleOutlined
-} from '@ant-design/icons';
+import React, { useState, useEffect } from 'react';
 import './News.css';
+import { Newspaper, Clock, ExternalLink, RefreshCw, AlertCircle, Share2 } from 'lucide-react';
+import { Modal, Button, message } from 'antd';
 
-const { Option } = Select;
-const { Search } = Input;
-const { Title, Text, Paragraph } = Typography;
-
+// Define interfaces for type safety
 interface NewsArticle {
-  id: string;
+  urlToImage: string;
   title: string;
-  description: string;
-  content: string;
+  description: string | null;
+  content?: string | null;
   url: string;
-  imageUrl?: string;
   publishedAt: string;
+  author: string | null;
   source: {
     name: string;
-    url?: string;
   };
-  author?: string;
-  category: 'health' | 'water_quality' | 'government' | 'research' | 'community';
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  tags: string[];
 }
 
-// Mock news data - In real implementation, this would come from news APIs
-const mockNewsData: NewsArticle[] = [
-  {
-    id: '1',
-    title: 'WHO Reports 30% Reduction in Waterborne Diseases in Northeast India',
-    description: 'World Health Organization acknowledges significant progress in combating waterborne diseases across northeastern states through improved surveillance systems.',
-    content: 'The World Health Organization has reported a remarkable 30% reduction in waterborne diseases across Northeast India over the past year, attributing this success to enhanced surveillance systems and community health initiatives...',
-    url: 'https://www.who.int/news/northeast-india-waterborne-diseases',
-    imageUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=200&fit=crop',
-    publishedAt: '2024-01-15T10:30:00Z',
-    source: {
-      name: 'WHO India',
-      url: 'https://www.who.int'
-    },
-    author: 'Dr. Sarah Johnson',
-    category: 'health',
-    priority: 'high',
-    tags: ['WHO', 'reduction', 'surveillance', 'northeast']
-  },
-  {
-    id: '2',
-    title: 'Assam Government Launches Advanced Water Quality Monitoring System',
-    description: 'State government introduces real-time water quality monitoring across 500 locations to ensure safe drinking water for rural communities.',
-    content: 'The Assam government has launched a comprehensive water quality monitoring system covering 500 strategic locations across the state...',
-    url: 'https://www.assamgov.in/water-quality-monitoring',
-    imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400&h=200&fit=crop',
-    publishedAt: '2024-01-14T14:20:00Z',
-    source: {
-      name: 'Assam Government',
-      url: 'https://www.assamgov.in'
-    },
-    author: 'Public Health Department',
-    category: 'government',
-    priority: 'medium',
-    tags: ['assam', 'monitoring', 'government', 'rural']
-  },
-  {
-    id: '3',
-    title: 'New Research Identifies Early Warning Indicators for Cholera Outbreaks',
-    description: 'Scientists at IIT Guwahati develop machine learning model to predict cholera outbreaks 72 hours in advance using environmental data.',
-    content: 'Researchers at the Indian Institute of Technology Guwahati have developed a groundbreaking machine learning model that can predict cholera outbreaks up to 72 hours in advance...',
-    url: 'https://www.iitg.ac.in/research/cholera-prediction',
-    imageUrl: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
-    publishedAt: '2024-01-13T09:15:00Z',
-    source: {
-      name: 'IIT Guwahati',
-      url: 'https://www.iitg.ac.in'
-    },
-    author: 'Dr. Amit Kumar Singh',
-    category: 'research',
-    priority: 'high',
-    tags: ['research', 'machine learning', 'prediction', 'cholera']
-  },
-  {
-    id: '4',
-    title: 'Community Health Workers Complete Training in Waterborne Disease Management',
-    description: '500 community health workers across Northeast complete intensive training program on identification and management of waterborne diseases.',
-    content: 'A comprehensive training program for community health workers has been successfully completed across all northeastern states...',
-    url: 'https://www.healthministry.gov.in/community-training',
-    imageUrl: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=200&fit=crop',
-    publishedAt: '2024-01-12T16:45:00Z',
-    source: {
-      name: 'Ministry of Health',
-      url: 'https://www.healthministry.gov.in'
-    },
-    author: 'Community Health Division',
-    category: 'community',
-    priority: 'medium',
-    tags: ['training', 'community', 'health workers', 'management']
-  },
-  {
-    id: '5',
-    title: 'URGENT: Cholera Outbreak Reported in Remote Meghalaya Village',
-    description: 'Health authorities confirm 15 cases of cholera in remote village; immediate containment measures implemented.',
-    content: 'Health authorities have confirmed a cholera outbreak in a remote village in Meghalaya with 15 confirmed cases. Immediate containment and treatment measures have been implemented...',
-    url: 'https://www.meghhealth.gov.in/urgent-cholera-outbreak',
-    imageUrl: 'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=400&h=200&fit=crop',
-    publishedAt: '2024-01-11T08:30:00Z',
-    source: {
-      name: 'Meghalaya Health Dept',
-      url: 'https://www.meghhealth.gov.in'
-    },
-    author: 'State Epidemiologist',
-    category: 'health',
-    priority: 'urgent',
-    tags: ['urgent', 'outbreak', 'meghalaya', 'containment']
-  }
-];
+interface NewsCategory {
+  id: string;
+  name: string;
+  icon: string;
+}
 
-const News: React.FC = () => {
-  const [newsArticles] = useState<NewsArticle[]>(mockNewsData);
-  const [filteredArticles, setFilteredArticles] = useState<NewsArticle[]>(mockNewsData);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [selectedPriority, setSelectedPriority] = useState<string>('all');
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [loading, setLoading] = useState(false);
+const NewsSection: React.FC = () => {
+  const [news, setNews] = useState<NewsArticle[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('general');
+  const [isDark, setIsDark] = useState<boolean>(false);
+  const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
 
-  const filterArticles = useCallback(() => {
-    let filtered = newsArticles;
+  // Prefer an environment variable so keys are not hard-coded into source.
+  // Set this in a `.env` file at project root as: REACT_APP_NEWS_API_KEY=your_key_here
+  const API_KEY = (process.env.REACT_APP_NEWS_API_KEY || process.env.REACT_APP_NEWSAPI_KEY || '').trim();
+  
+  const categories: NewsCategory[] = [
+    { id: 'water pollution rural india', name: 'Rural India', icon: '🏘️' },
+    { id: 'water pollution meghalaya', name: 'Meghalaya', icon: '⛰️' },
+    { id: 'water diseases india', name: 'Water Diseases', icon: '🦠' },
+    { id: 'clean water access rural', name: 'Clean Water Access', icon: '💧' },
+    { id: 'waterborne diseases prevention', name: 'Prevention', icon: '🛡️' },
+    { id: 'water quality testing india', name: 'Water Quality', icon: '🔬' },
+    { id: 'groundwater contamination', name: 'Contamination', icon: '⚠️' }
+  ];
 
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(article => article.category === selectedCategory);
+  const fetchNews = async (category: string = 'general', replace: boolean = true): Promise<void> => {
+    setLoading(true);
+    setError(null);
+    
+    // Quick validation: if no API key, surface clear instructions to the user
+    if (!API_KEY) {
+      setLoading(false);
+      const msg = "No News API key provided. Add `REACT_APP_NEWS_API_KEY` to a .env file and restart the dev server.";
+      setError(msg);
+      console.error(msg);
+      return;
     }
+    try {
+      // NewsAPI only accepts a limited set of values for the `category` parameter.
+      // If the selected category is not one of those, use the `everything` endpoint
+      // or use `q` to perform a search query so custom terms work.
+      const allowedCategories = new Set([
+        'business',
+        'entertainment',
+        'general',
+        'health',
+        'science',
+        'sports',
+        'technology',
+      ]);
 
-    if (selectedPriority !== 'all') {
-      filtered = filtered.filter(article => article.priority === selectedPriority);
+      let url = '';
+      // Always prefer news related to water. We'll add a water-focused `q` query
+      // so the API returns water-related articles. We still keep country=in for
+      // top-headlines to favour India, but we include `q` in both top-headlines
+      // and everything calls to bias results toward water topics.
+      const waterKeywords = [
+        'water', 'waterborne', 'water quality', 'water pollution', 'river', 'drinking water',
+        'contamination', 'sewage', 'wastewater', 'treatment', 'sanitation', 'groundwater', 'aquifer'
+      ];
+      const waterQuery = encodeURIComponent(waterKeywords.join(' OR '));
+
+      // Location-specific keywords for certain categories
+      let locationKeywords: string[] = [];
+      if (category.toLowerCase().includes('meghalaya')) {
+        locationKeywords = ['meghalaya', 'shillong', 'tura', 'mawphlang'];
+      } else if (category.toLowerCase().includes('rural india')) {
+        locationKeywords = ['rural india', 'rural', 'village', 'villages', 'rural communities'];
+      }
+      const locationQuery = locationKeywords.length ? encodeURIComponent(locationKeywords.join(' OR ')) : '';
+
+      if (allowedCategories.has(category)) {
+        // For location categories, include location keywords OR water keywords in the q param
+        if (locationKeywords.length) {
+          const combined = `${waterKeywords.join(' OR ')} OR ${locationKeywords.join(' OR ')}`;
+          url = `https://newsapi.org/v2/top-headlines?country=in&category=${category}&q=${encodeURIComponent(combined)}&language=en&pageSize=12&apiKey=${API_KEY}`;
+        } else {
+          url = `https://newsapi.org/v2/top-headlines?country=in&category=${category}&q=${waterQuery}&language=en&pageSize=12&apiKey=${API_KEY}`;
+        }
+      } else if (category && category !== 'general') {
+        // Use the `everything` endpoint. If it's a location category, bias toward that location too.
+        if (locationKeywords.length) {
+          const query = `${category} India OR (${waterKeywords.join(' OR ')}) OR (${locationKeywords.join(' OR ')})`;
+          url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=en&pageSize=12&apiKey=${API_KEY}`;
+        } else {
+          const query = `${category} India OR (${waterKeywords.join(' OR ')})`;
+          url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=en&pageSize=12&apiKey=${API_KEY}`;
+        }
+      } else {
+        // Fallback to top-headlines general for India, but include water keywords (and location if present)
+        if (locationKeywords.length) {
+          const combined = `${waterKeywords.join(' OR ')} OR ${locationKeywords.join(' OR ')}`;
+          url = `https://newsapi.org/v2/top-headlines?country=in&q=${encodeURIComponent(combined)}&language=en&pageSize=12&apiKey=${API_KEY}`;
+        } else {
+          url = `https://newsapi.org/v2/top-headlines?country=in&q=${waterQuery}&language=en&pageSize=12&apiKey=${API_KEY}`;
+        }
+      }
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        // Try to parse API error message when available
+        let apiErr = 'Failed to fetch news';
+        try {
+          const errData = await response.json();
+          apiErr = errData.message || apiErr;
+          // If the API explicitly says the key is invalid, provide actionable help
+          if (errData.code === 'apiKeyInvalid' || /api key/i.test(apiErr)) {
+            apiErr = "Your API key is invalid or incorrect. Check your key, or create a free key at https://newsapi.org and set `REACT_APP_NEWS_API_KEY` in a .env file (restart the dev server after).";
+          }
+        } catch (e) {
+          /* ignore JSON parse errors */
+        }
+        throw new Error(apiErr);
+      }
+      const data = await response.json();
+      // Helpful debug log when things don't load
+      if (data.status && data.status !== 'ok') {
+        console.error('NewsAPI response:', data);
+        throw new Error(data.message || 'Failed to load news');
+      }
+
+      const fetched = data.articles.filter((article: NewsArticle) => article.urlToImage && article.title);
+
+      // Restrict to water-related content only (keyword based filter)
+      const matchesWater = (article: NewsArticle) => {
+        const hay = `${article.title || ''} ${article.description || ''} ${article.content || ''}`.toLowerCase();
+        return waterKeywords.some(k => hay.includes(k));
+      };
+
+      const waterArticles = fetched.filter(matchesWater);
+
+      if (replace) {
+        setNews(waterArticles);
+      } else {
+        // Merge new water articles: prepend any fetched articles that are not already present
+        setNews((prev) => {
+          const existingUrls = new Set(prev.map((a) => a.url));
+          const newArticles = waterArticles.filter((a: NewsArticle) => !existingUrls.has(a.url));
+          if (newArticles.length === 0) return prev;
+          const merged = [...newArticles, ...prev];
+          return merged;
+        });
+
+        if (waterArticles.length > 0) {
+          const prevUrls = new Set(news.map((a) => a.url));
+          const added = waterArticles.filter((a: NewsArticle) => !prevUrls.has(a.url)).length;
+          if (added > 0) message.success(`${added} new water article${added > 1 ? 's' : ''} added`);
+        } else {
+          message.info('No new water-related articles found');
+        }
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+      setError(errorMessage);
+      // Log without exposing the API key
+      console.error('Error fetching news:', errorMessage);
+    } finally {
+      setLoading(false);
     }
-
-    if (searchTerm) {
-      filtered = filtered.filter(article => 
-        article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        article.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        article.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
-      );
-    }
-
-    // Sort by priority and date
-    filtered.sort((a, b) => {
-      const priorityOrder = { 'urgent': 4, 'high': 3, 'medium': 2, 'low': 1 };
-      const priorityDiff = (priorityOrder[b.priority as keyof typeof priorityOrder] || 0) - 
-                          (priorityOrder[a.priority as keyof typeof priorityOrder] || 0);
-      
-      if (priorityDiff !== 0) return priorityDiff;
-      
-      return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
-    });
-
-    setFilteredArticles(filtered);
-  }, [newsArticles, selectedCategory, selectedPriority, searchTerm]);
+  };
 
   useEffect(() => {
-    filterArticles();
-  }, [filterArticles]);
+    // Initial load: replace current list
+    fetchNews(selectedCategory, true);
 
-  const refreshNews = () => {
-    setLoading(true);
-    // Simulate API call to fetch latest news
-    setTimeout(() => {
-      // In real implementation, this would fetch from news APIs like:
-      // - NewsAPI
-      // - Government health department feeds
-      // - WHO RSS feeds
-      // - Local news sources
-      setLoading(false);
-    }, 1500);
+    // Auto-refresh: merge new articles (prepend unseen ones)
+    const interval = setInterval(() => {
+      fetchNews(selectedCategory, false);
+    }, 300000);
+
+    return () => clearInterval(interval);
+  }, [selectedCategory]);
+
+  const handleCategoryChange = (categoryId: string): void => {
+    setSelectedCategory(categoryId);
   };
 
-  const getCategoryLabel = (category: string) => {
-    switch (category) {
-      case 'health': return 'Health';
-      case 'water_quality': return 'Water Quality';
-      case 'government': return 'Government';
-      case 'research': return 'Research';
-      case 'community': return 'Community';
-      default: return 'General';
+  const handleRefresh = (): void => {
+    // Manual refresh should merge new articles rather than replace
+    fetchNews(selectedCategory, false);
+  };
+
+  const openArticle = (article: NewsArticle) => {
+    setSelectedArticle(article);
+  };
+
+  const closeArticle = () => setSelectedArticle(null);
+
+  const handleShare = async (article: NewsArticle | null) => {
+    if (!article) return;
+    const shareData = {
+      title: article.title,
+      text: article.description || article.title,
+      url: article.url,
+    };
+
+    try {
+      if ((navigator as any).share) {
+        await (navigator as any).share(shareData);
+        message.success('Shared successfully');
+      } else if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(article.url);
+        message.success('Article link copied to clipboard');
+      } else {
+        // Fallback: open the article in a new tab and instruct the user
+        window.open(article.url, '_blank', 'noopener');
+        message.info('Opened article in a new tab. Copy the URL to share.');
+      }
+    } catch (err) {
+      console.error('Share failed', err);
+      message.error('Unable to share at this time');
     }
   };
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'health': return 'green';
-      case 'water_quality': return 'blue';
-      case 'government': return 'purple';
-      case 'research': return 'orange';
-      case 'community': return 'cyan';
-      default: return 'default';
-    }
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'urgent': return 'red';
-      case 'high': return 'orange';
-      case 'medium': return 'blue';
-      case 'low': return 'green';
-      default: return 'default';
-    }
-  };
-
-  const getPriorityIcon = (priority: string) => {
-    switch (priority) {
-      case 'urgent': return <ExclamationCircleOutlined />;
-      case 'high': return <FireOutlined />;
-      case 'medium': return <ClockCircleOutlined />;
-      case 'low': return <ClockCircleOutlined />;
-      default: return <ClockCircleOutlined />;
-    }
-  };
-
-  const openArticle = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
-  const formatDate = (dateString: string) => {
+  const formatTimeAgo = (dateString: string): string => {
     const date = new Date(dateString);
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.floor(diffHours / 24);
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
 
-    if (diffHours < 1) return 'Just now';
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString();
+    if (diffMins < 60) return `${diffMins} minutes ago`;
+    if (diffHours < 24) return `${diffHours} hours ago`;
+    return `${diffDays} days ago`;
   };
 
   return (
-    <div className="news-page">
-      <div className="page-header">
-        <div>
-          <Title level={2}>
-            <GlobalOutlined /> Latest News
-          </Title>
-          <Text>Stay updated with the latest developments in water safety and public health</Text>
+    <div className={`news-container ${isDark ? 'dark' : 'light'} min-h-screen py-12 px-4 sm:px-6 lg:px-8`}>
+      <div className="news-wrapper max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="header text-center mb-12">
+          <div className="header-icon-wrapper flex items-center justify-center gap-3 mb-4">
+            <div className="header-icon bg-gradient-to-r from-blue-500 to-green-500 p-3 rounded-full">
+              <Newspaper className="w-8 h-8 text-white" />
+            </div>
+            <h1 className={`header-title text-4xl font-bold ${isDark ? 'header-title dark' : 'header-title light'}`}>
+              Latest News
+            </h1>
+          </div>
+          <p className={`header-subtitle text-lg ${isDark ? 'header-subtitle dark' : 'header-subtitle light'}`}>
+            Stay updated with real-time news from around the world
+          </p>
+          
+          {/* Controls */}
+          <div className="controls flex items-center justify-center gap-4 mt-6">
+            <button
+              onClick={handleRefresh}
+              disabled={loading}
+              className={`refresh-button flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${loading ? 'loading' : ''}`}
+            >
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+              Refresh
+            </button>
+            
+            <button
+              onClick={() => setIsDark(!isDark)}
+              className={`theme-toggle px-4 py-2 rounded-lg transition-all ${isDark ? 'theme-toggle dark' : 'theme-toggle light'}`}
+            >
+              {isDark ? '☀️' : '🌙'}
+            </button>
+          </div>
         </div>
-        <Button 
-          type="primary" 
-          icon={<ReloadOutlined />} 
-          onClick={refreshNews}
-          loading={loading}
-        >
-          Refresh News
-        </Button>
-      </div>
 
-      {/* Filters */}
-      <Card className="filters-card" size="small">
-        <Row gutter={[16, 16]} align="middle">
-          <Col xs={24} sm={12} md={8}>
-            <Search
-              placeholder="Search news articles..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              prefix={<SearchOutlined />}
-              allowClear
-            />
-          </Col>
-          <Col xs={12} sm={6} md={4}>
-            <Select
-              value={selectedCategory}
-              onChange={setSelectedCategory}
-              style={{ width: '100%' }}
-            >
-              <Option value="all">All Categories</Option>
-              <Option value="health">Health</Option>
-              <Option value="water_quality">Water Quality</Option>
-              <Option value="government">Government</Option>
-              <Option value="research">Research</Option>
-              <Option value="community">Community</Option>
-            </Select>
-          </Col>
-          <Col xs={12} sm={6} md={4}>
-            <Select
-              value={selectedPriority}
-              onChange={setSelectedPriority}
-              style={{ width: '100%' }}
-            >
-              <Option value="all">All Priority</Option>
-              <Option value="urgent">Urgent</Option>
-              <Option value="high">High</Option>
-              <Option value="medium">Medium</Option>
-              <Option value="low">Low</Option>
-            </Select>
-          </Col>
-          <Col xs={24} md={8}>
-            <Space wrap>
-              <Text strong>Found: {filteredArticles.length} articles</Text>
-              {loading && <Spin size="small" />}
-            </Space>
-          </Col>
-        </Row>
-      </Card>
+        {/* Category Filter */}
+        <div className="category-filter mb-8 overflow-x-auto">
+          <div className="category-buttons flex gap-3 justify-center pb-4">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => handleCategoryChange(cat.id)}
+                className={`category-button ${selectedCategory === cat.id ? 'active' : `inactive ${isDark ? 'dark' : 'light'}`} flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all whitespace-nowrap`}
+              >
+                <span className="emoji text-lg">{cat.icon}</span>
+                {cat.name}
+              </button>
+            ))}
+          </div>
+        </div>
 
-      {/* News Articles */}
-      <Row gutter={[16, 16]}>
-        {filteredArticles.map((article) => (
-          <Col xs={24} lg={12} key={article.id}>
-            <Card
-              className={`news-card priority-${article.priority}`}
-              hoverable
-              onClick={() => openArticle(article.url)}
-            >
-              <div className="news-content">
-                {article.imageUrl && (
-                  <div className="news-image">
-                    <img src={article.imageUrl} alt={article.title} />
-                  </div>
-                )}
-                
-                <div className="news-body">
-                  <div className="news-header">
-                    <div className="news-meta">
-                      <Tag 
-                        color={getPriorityColor(article.priority)}
-                        icon={getPriorityIcon(article.priority)}
-                      >
-                        {article.priority.toUpperCase()}
-                      </Tag>
-                      <Tag color={getCategoryColor(article.category)}>
-                        {getCategoryLabel(article.category)}
-                      </Tag>
-                    </div>
-                    <Text type="secondary" className="news-date">
-                      <CalendarOutlined /> {formatDate(article.publishedAt)}
-                    </Text>
-                  </div>
-
-                  <Title level={4} className="news-title" ellipsis={{ rows: 2 }}>
-                    {article.title}
-                  </Title>
-
-                  <Paragraph 
-                    ellipsis={{ rows: 3 }} 
-                    className="news-description"
+        {/* Error State */}
+        {error && (
+          <div className="error-container max-w-2xl mx-auto mb-8">
+            <div className="error-box bg-red-50 border border-red-200 rounded-lg p-6 flex items-start gap-4">
+              <AlertCircle className="error-icon w-6 h-6 text-red-500 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="error-title text-red-800 font-semibold mb-2">Error Loading News</h3>
+                <p className="error-message text-red-600 mb-4">{error}</p>
+                <p className="error-help text-sm text-red-500">
+                  Please ensure you have added a valid API key from{' '}
+                  <a 
+                    href="https://newsapi.org" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="error-link underline font-semibold"
                   >
-                    {article.description}
-                  </Paragraph>
+                    NewsAPI.org
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
-                  <div className="news-footer">
-                    <div className="news-source">
-                      <Avatar 
-                        size="small" 
-                        icon={<UserOutlined />} 
-                        className="source-avatar"
-                      />
-                      <div className="source-info">
-                        <Text strong>{article.source.name}</Text>
-                        {article.author && (
-                          <Text type="secondary" className="author">
-                            by {article.author}
-                          </Text>
-                        )}
-                      </div>
-                    </div>
-                    
-                    <Button 
-                      type="link" 
-                      icon={<LinkOutlined />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openArticle(article.url);
-                      }}
-                    >
-                      Read More
-                    </Button>
-                  </div>
-
-                  <div className="news-tags">
-                    <Space wrap>
-                      {article.tags.slice(0, 3).map(tag => (
-                        <Tag key={tag}>{tag}</Tag>
-                      ))}
-                      {article.tags.length > 3 && (
-                        <Text type="secondary" style={{ fontSize: '12px' }}>
-                          +{article.tags.length - 3} more
-                        </Text>
-                      )}
-                    </Space>
-                  </div>
+        {/* Loading State */}
+        {loading && !error && (
+          <div className="news-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className={`skeleton-card rounded-xl overflow-hidden ${isDark ? 'skeleton-card dark' : 'skeleton-card light'} shadow-lg animate-pulse`}
+              >
+                <div className={`skeleton-image h-48 ${isDark ? 'skeleton-image dark' : 'skeleton-image light'}`} />
+                <div className="skeleton-content p-6">
+                  <div className={`skeleton-line ${isDark ? 'skeleton-line dark' : 'skeleton-line light'} rounded mb-3`} />
+                  <div className={`skeleton-line shorter ${isDark ? 'skeleton-line dark' : 'skeleton-line light'} rounded mb-3 w-3/4`} />
+                  <div className={`skeleton-line short ${isDark ? 'skeleton-line dark' : 'skeleton-line light'} rounded w-1/2`} />
                 </div>
               </div>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+            ))}
+          </div>
+        )}
 
-      {filteredArticles.length === 0 && (
-        <div className="no-results">
-          <GlobalOutlined style={{ fontSize: '48px', color: '#d9d9d9' }} />
-          <Title level={4} type="secondary">No news articles found</Title>
-          <Text type="secondary">Try adjusting your search criteria or filters</Text>
-        </div>
-      )}
+        {/* News Grid */}
+        {!loading && !error && news.length > 0 && (
+          <div className="news-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {news.map((article, index) => (
+              <article
+                key={index}
+                className={`article-card group rounded-xl overflow-hidden ${isDark ? 'article-card dark' : 'article-card light'} shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2`}
+              >
+                {/* Image */}
+                <div className="article-image-wrapper relative h-48 overflow-hidden">
+                  <img
+                    src={article.urlToImage}
+                    alt={article.title}
+                    className="article-image w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                      e.currentTarget.src = 'https://via.placeholder.com/400x200/1890ff/ffffff?text=News+Image';
+                    }}
+                  />
+                  <div className="absolute top-3 left-3 article-source-badge">
+                    <span className="source-tag bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                      {article.source.name}
+                    </span>
+                  </div>
+                </div>
 
-      {/* News Sources Info */}
-      <Card className="sources-info" title="News Sources" size="small">
-        <Text type="secondary">
-          News articles are aggregated from official sources including WHO, Government Health Departments, 
-          Research Institutions, and verified news outlets to ensure accuracy and reliability.
-        </Text>
-      </Card>
+                {/* Content */}
+                <div className="article-content p-6">
+                  <h3 className={`article-title text-lg font-bold mb-3 line-clamp-2 ${isDark ? 'article-title dark' : 'article-title light'} group-hover:text-blue-500 transition-colors`}>
+                    {article.title}
+                  </h3>
+                  
+                  <p className={`article-description text-sm mb-4 line-clamp-3 ${isDark ? 'article-description dark' : 'article-description light'}`}>
+                    {article.description || 'No description available'}
+                  </p>
+
+                  <div className="article-footer flex items-center justify-between">
+                    <div className="article-time flex items-center gap-2">
+                      <Clock className={`w-4 h-4 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} />
+                      <span className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                        {formatTimeAgo(article.publishedAt)}
+                      </span>
+                    </div>
+                    
+                    <button
+                      onClick={() => openArticle(article)}
+                      className="article-link flex items-center gap-1 text-blue-500 hover:text-blue-600 text-sm font-semibold transition-colors bg-transparent border-none cursor-pointer"
+                    >
+                      Read More
+                      <ExternalLink className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {article.author && (
+                    <div className={`article-author-wrapper mt-4 pt-4 ${isDark ? 'article-author-wrapper dark' : 'article-author-wrapper light'}`}>
+                      <p className={`article-author text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                        By {article.author}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+
+        {/* No Results */}
+        {!loading && !error && news.length === 0 && (
+          <div className={`no-results text-center py-12`}>
+            <Newspaper className={`w-16 h-16 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-400'}`} />
+            <p className={`text-lg ${isDark ? 'no-results p dark' : 'no-results p light'}`}>
+              No news articles found for this category
+            </p>
+          </div>
+        )}
+
+      
+      {/* Article Modal */}
+      <Modal
+        open={!!selectedArticle}
+        onCancel={closeArticle}
+        footer={null}
+        width={900}
+        centered
+        maskStyle={{ backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
+        bodyStyle={{ padding: 0 }}
+        closeIcon={<span style={{ fontSize: 20 }}>×</span>}
+      >
+        {selectedArticle && (
+          <div className={`article-modal ${isDark ? 'article-card dark' : 'article-card light'}`}>
+            <div style={{ height: 420, overflow: 'hidden' }}>
+              <img
+                src={selectedArticle.urlToImage}
+                alt={selectedArticle.title}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                onError={(e: React.SyntheticEvent<HTMLImageElement>) => { e.currentTarget.src = 'https://via.placeholder.com/900x420/1890ff/ffffff?text=News+Image'; }}
+              />
+            </div>
+            <div style={{ padding: 24 }}>
+              <h2 style={{ marginBottom: 8 }}>{selectedArticle.title}</h2>
+              <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 12 }}>
+                <Clock className="w-4 h-4" />
+                <span style={{ fontSize: 13, color: isDark ? '#9ca3af' : '#6b7280' }}>{formatTimeAgo(selectedArticle.publishedAt)}</span>
+                <span style={{ marginLeft: 12, fontSize: 13, color: isDark ? '#9ca3af' : '#6b7280' }}>{selectedArticle.source.name}</span>
+                {selectedArticle.author && (
+                  <span style={{ marginLeft: 'auto', fontSize: 13, color: isDark ? '#9ca3af' : '#6b7280' }}>
+                    By {selectedArticle.author}
+                  </span>
+                )}
+              </div>
+
+              {/* Show the full content when available, otherwise fallback to description */}
+              {selectedArticle.content ? (
+                <div style={{ marginBottom: 16, color: isDark ? '#d1d5db' : '#374151', whiteSpace: 'pre-wrap' }}>
+                  {selectedArticle.content}
+                </div>
+              ) : (
+                <p style={{ marginBottom: 16, color: isDark ? '#d1d5db' : '#374151' }}>{selectedArticle.description || 'No description available'}</p>
+              )}
+
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+                <Button type="primary" onClick={() => window.open(selectedArticle.url, '_blank', 'noopener')}>
+                  Open Original
+                </Button>
+
+                <Button onClick={closeArticle}>Close</Button>
+
+                <Button onClick={() => handleShare(selectedArticle)} icon={<Share2 className="w-4 h-4" />}>
+                  Share
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
+      </div>
     </div>
   );
 };
 
-export default News;
+export default NewsSection;
+  

@@ -1,19 +1,24 @@
+// src/pages/Dashboard.tsx
 import React from 'react';
-import { Row, Col, Card, Statistic, Table, Tag, Progress, Timeline } from 'antd';
+import { Row, Col, Card, Statistic, Table, Tag, Progress, Timeline, List, Button, Empty } from 'antd';
 import { 
   ArrowUpOutlined, 
   ArrowDownOutlined, 
   AlertOutlined,
   CheckCircleOutlined,
   ExclamationCircleOutlined,
-  ClockCircleOutlined
+  ClockCircleOutlined,
+  BellOutlined,
+  FileTextOutlined,
+  BookOutlined
 } from '@ant-design/icons';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../components/ThemeProvider';
+import { useAuth } from '../contexts/AuthContext';
 import './Dashboard.css';
 
-// Mock data for demonstration
+// Mock data (kept from your original file)
 const weeklyData = [
   { day: 'Mon', cases: 12, recovered: 8, active: 4 },
   { day: 'Tue', cases: 19, recovered: 15, active: 4 },
@@ -65,45 +70,190 @@ const recentAlerts = [
   }
 ];
 
-const Dashboard: React.FC = () => {
+const alertColumns = [
+  { title: 'Type', dataIndex: 'type', key: 'type' },
+  { title: 'Location', dataIndex: 'location', key: 'location' },
+  { 
+    title: 'Severity', 
+    dataIndex: 'severity', 
+    key: 'severity',
+    render: (severity: string) => {
+      const color = severity === 'High' ? 'red' : severity === 'Medium' ? 'orange' : 'blue';
+      return <Tag color={color}>{severity}</Tag>;
+    }
+  },
+  { title: 'Time', dataIndex: 'time', key: 'time' },
+  { 
+    title: 'Status', 
+    dataIndex: 'status', 
+    key: 'status',
+    render: (status: string) => {
+      const color = status === 'Active' ? 'red' : status === 'Investigating' ? 'orange' : 'green';
+      return <Tag color={color}>{status}</Tag>;
+    }
+  }
+];
+
+// --- Small sub-views for role-specific dashboards ---
+
+const AshaView: React.FC = () => {
+  // For now we show a compact view using the same mock data.
+  // You can replace these with real API calls later.
+  const recentWater = waterQualityData.slice(0, 6);
+  const recentPreds = diseaseDistribution.slice(0, 4);
+
+  return (
+    <div className="dashboard">
+      <div className="dashboard-header">
+        <h1>ASHA Dashboard</h1>
+        <p className="dashboard-sub">Overview of tests and local alerts</p>
+      </div>
+
+      <Row gutter={[16, 16]} className="stats-row">
+        <Col xs={24} sm={12} md={8}>
+          <Card className="chart-card">
+            <Statistic title="Water tests" value={recentWater.length * 5} prefix={<FileTextOutlined />} />
+            <div className="stat-sub">Your recent tests</div>
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} md={8}>
+          <Card className="chart-card">
+            <Statistic title="Distinct sites" value={recentWater.length} prefix={<CheckCircleOutlined />} />
+            <div className="stat-sub">Unique water sources</div>
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} md={8}>
+          <Card className="chart-card">
+            <Statistic title="Alerts flagged" value={recentPreds.length} prefix={<ExclamationCircleOutlined />} />
+            <div className="stat-sub">Potential issues</div>
+          </Card>
+        </Col>
+      </Row>
+
+      <Row gutter={[16, 16]} className="charts-row">
+        <Col xs={24} lg={14}>
+          <Card className="chart-card" title="Recent Water Test Summary">
+            <Table
+              dataSource={recentWater.map((r, i) => ({ key: i, ...r }))}
+              columns={[
+                { title: 'Location', dataIndex: 'location', key: 'location' },
+                { title: 'Safe %', dataIndex: 'safe', key: 'safe' },
+                { title: 'Warning %', dataIndex: 'warning', key: 'warning' },
+                { title: 'Contaminated %', dataIndex: 'contaminated', key: 'contaminated' }
+              ]}
+              pagination={{ pageSize: 5 }}
+              size="small"
+            />
+          </Card>
+        </Col>
+
+        <Col xs={24} lg={10}>
+          <Card className="chart-card" title="Recent Alerts">
+            <List
+              dataSource={recentAlerts}
+              renderItem={item => (
+                <List.Item>
+                  <List.Item.Meta
+                    title={`${item.type} - ${item.location}`}
+                    description={`${item.severity} | ${item.time}`}
+                  />
+                  <div>{item.status}</div>
+                </List.Item>
+              )}
+            />
+          </Card>
+
+          <Card className="chart-card" style={{ marginTop: 16 }}>
+            <h3 style={{ marginBottom: 8 }}>Quick Actions</h3>
+            <Button type="primary" block style={{ marginBottom: 8 }}>Report Water Quality</Button>
+            <Button block style={{ marginBottom: 8 }}>Report Symptoms</Button>
+            <Button block>View My Submissions</Button>
+          </Card>
+        </Col>
+      </Row>
+    </div>
+  );
+};
+
+const CommunityView: React.FC = () => {
+  return (
+    <div className="dashboard">
+      <div className="dashboard-header">
+        <h1>Community Dashboard</h1>
+        <p className="dashboard-sub">Simple overview for community users</p>
+      </div>
+
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={12} md={8}>
+          <Card className="chart-card">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h3 style={{ margin: 0 }}>Alerts</h3>
+                <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Active notifications</p>
+              </div>
+              <BellOutlined style={{ fontSize: 28, color: 'var(--primary-color)' }} />
+            </div>
+            <div style={{ marginTop: 12 }}>
+              <Button type="primary" block>View Alerts</Button>
+            </div>
+          </Card>
+        </Col>
+
+        <Col xs={24} sm={12} md={8}>
+          <Card className="chart-card">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h3 style={{ margin: 0 }}>Report</h3>
+                <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Report issues quickly</p>
+              </div>
+              <FileTextOutlined style={{ fontSize: 28, color: 'var(--primary-color)' }} />
+            </div>
+            <div style={{ marginTop: 12 }}>
+              <Button block style={{ marginBottom: 8 }}>Report Symptoms</Button>
+              <Button block>Report Water Quality</Button>
+            </div>
+          </Card>
+        </Col>
+
+        <Col xs={24} sm={12} md={8}>
+          <Card className="chart-card">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h3 style={{ margin: 0 }}>Education</h3>
+                <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Helpful resources</p>
+              </div>
+              <BookOutlined style={{ fontSize: 28, color: 'var(--primary-color)' }} />
+            </div>
+            <div style={{ marginTop: 12 }}>
+              <Button block>Open Education</Button>
+            </div>
+          </Card>
+        </Col>
+      </Row>
+
+      <Row style={{ marginTop: 16 }}>
+        <Col xs={24}>
+          <Card className="chart-card" title="Community Resources">
+            <List
+              size="small"
+              dataSource={[
+                { title: 'How to treat water at home' },
+                { title: 'Recognizing dehydration in children' },
+                { title: 'When to visit a clinic' }
+              ]}
+              renderItem={item => <List.Item>{item.title}</List.Item>}
+            />
+          </Card>
+        </Col>
+      </Row>
+    </div>
+  );
+};
+
+// --- Original full dashboard (kept mostly unchanged) ---
+const FullDashboard: React.FC = () => {
   const { t } = useTranslation();
   const { isDark } = useTheme();
-
-  const alertColumns = [
-    {
-      title: 'Type',
-      dataIndex: 'type',
-      key: 'type',
-    },
-    {
-      title: 'Location',
-      dataIndex: 'location',
-      key: 'location',
-    },
-    {
-      title: 'Severity',
-      dataIndex: 'severity',
-      key: 'severity',
-      render: (severity: string) => {
-        const color = severity === 'High' ? 'red' : severity === 'Medium' ? 'orange' : 'blue';
-        return <Tag color={color}>{severity}</Tag>;
-      }
-    },
-    {
-      title: 'Time',
-      dataIndex: 'time',
-      key: 'time',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: string) => {
-        const color = status === 'Active' ? 'red' : status === 'Investigating' ? 'orange' : 'green';
-        return <Tag color={color}>{status}</Tag>;
-      }
-    }
-  ];
 
   return (
     <div className="dashboard">
@@ -228,7 +378,7 @@ const Dashboard: React.FC = () => {
       {/* Water Quality and Recent Activity */}
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={14}>
-          <Card title={t('dashboard.waterQualityOverview')} className="chart-card">
+          <Card title="Water Quality Overview" className="chart-card">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={waterQualityData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -244,7 +394,7 @@ const Dashboard: React.FC = () => {
           </Card>
         </Col>
         <Col xs={24} lg={10}>
-          <Card title={t('dashboard.recentActivity')}>
+          <Card title="Recent Activity">
             <Timeline>
               <Timeline.Item color="red">
                 <p>Outbreak alert in Village A</p>
@@ -281,10 +431,10 @@ const Dashboard: React.FC = () => {
         </Col>
       </Row>
 
-      {/* Hotspots Section */}
+      {/* Hotspots / Water sources / Resources */}
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={8}>
-          <Card title={t('dashboard.hotspots')}>
+          <Card title="Hotspots">
             <div className="hotspot-item">
               <div className="hotspot-header">
                 <span className="hotspot-name">Village A</span>
@@ -359,6 +509,39 @@ const Dashboard: React.FC = () => {
       </Row>
     </div>
   );
+};
+
+// --- Main Dashboard component with role switch ---
+const Dashboard: React.FC = () => {
+  const { user } = useAuth();
+
+  // not logged in (fallback)
+  if (!user) {
+    return (
+      <div className="dashboard">
+        <div className="dashboard-header">
+          <h1>Dashboard</h1>
+        </div>
+        <Card>
+          <Empty description="Please login to view the dashboard." />
+        </Card>
+      </div>
+    );
+  }
+
+  // choose view by role (switch)
+  switch (user.role) {
+    case 'asha_worker':
+      return <AshaView />;
+    case 'community_user':
+      return <CommunityView />;
+    case 'admin':
+    case 'healthcare_worker':
+    case 'district_health_official':
+    case 'government_body':
+    default:
+      return <FullDashboard />;
+  }
 };
 
 export default Dashboard;

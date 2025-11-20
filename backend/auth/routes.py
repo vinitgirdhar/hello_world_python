@@ -65,7 +65,7 @@ async def register(payload: RegisterRequest):
 @router.post("/login", response_model=TokenResponse)
 async def login(payload: UserLogin):
     """
-    Authenticate user and return JWT token.
+    Authenticate user and return JWT token plus a small user object.
     """
     email = payload.email.lower().strip()
     user = await users_col.find_one({"email": email})
@@ -74,7 +74,7 @@ async def login(payload: UserLogin):
 
     stored_hash = user.get("password", "")
 
-    # --- debugging helpers (keeps inside function to avoid syntax errors) ---
+    # --- debugging helpers (keeps inside function) ---
     print("DEBUG: found user id:", user.get("_id"))
     print("DEBUG: stored_hash startswith $2:", str(stored_hash).startswith("$2"))
 
@@ -86,7 +86,28 @@ async def login(payload: UserLogin):
 
     token, exp = create_access_token(str(user["_id"]), extra={"email": user["email"], "role": user.get("role")})
     expires_in = int((exp - datetime.utcnow()).total_seconds())
-    return {"access_token": token, "expires_in": expires_in, "token_type": "bearer"}
+
+    # minimal user object to return to frontend
+    user_out = {
+        "id": str(user["_1d"] if "_1d" in user else user.get("_id")),  # defensive: prefer _id but keep safe
+        "email": user.get("email"),
+        "role": user.get("role"),
+        "full_name": user.get("full_name"),
+        "organization": user.get("organization"),
+        "location": user.get("location"),
+        "phone": user.get("phone"),
+    }
+
+    # ensure correct id field (fix common issue if doc uses _id)
+    if not user_out["id"] and user.get("_id"):
+        user_out["id"] = str(user["_id"])
+
+    return {
+        "access_token": token,
+        "expires_in": expires_in,
+        "token_type": "bearer",
+        "user": user_out
+    }
 
 
 @router.get("/me")

@@ -1,3 +1,4 @@
+// src/components/Sidebar.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { Layout, Menu, Button, Avatar, Typography, Space, Badge, Tooltip, Switch, Slider, ColorPicker, Drawer, Divider } from 'antd';
 import {
@@ -54,6 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
   const location = useLocation();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showCustomization, setShowCustomization] = useState(false);
+
   const [settings, setSettings] = useState<SidebarSettings>(() => {
     const saved = localStorage.getItem('sidebarSettings');
     return saved ? JSON.parse(saved) : {
@@ -69,7 +71,6 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
     };
   });
 
-  // Save settings to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem('sidebarSettings', JSON.stringify(settings));
   }, [settings]);
@@ -79,130 +80,88 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
   };
 
   const togglePin = (itemKey: string) => {
-    setSettings(prev => ({
-      ...prev,
-      pinnedItems: prev.pinnedItems.includes(itemKey)
-        ? prev.pinnedItems.filter(key => key !== itemKey)
-        : [...prev.pinnedItems, itemKey]
-    }));
+    setSettings(prev => (prev.pinnedItems.includes(itemKey)
+      ? { ...prev, pinnedItems: prev.pinnedItems.filter(k => k !== itemKey) }
+      : { ...prev, pinnedItems: [...prev.pinnedItems, itemKey] }
+    ));
   };
 
   const toggleFavorite = (itemKey: string) => {
-    setSettings(prev => ({
-      ...prev,
-      favoriteItems: prev.favoriteItems.includes(itemKey)
-        ? prev.favoriteItems.filter(key => key !== itemKey)
-        : [...prev.favoriteItems, itemKey]
-    }));
+    setSettings(prev => (prev.favoriteItems.includes(itemKey)
+      ? { ...prev, favoriteItems: prev.favoriteItems.filter(k => k !== itemKey) }
+      : { ...prev, favoriteItems: [...prev.favoriteItems, itemKey] }
+    ));
   };
 
-  // Scroll handler for fade indicators
+  // Scroll fade handling
   const handleScroll = () => {
     if (scrollContainerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
       const hasScrollTop = scrollTop > 10;
       const hasScrollBottom = scrollTop < scrollHeight - clientHeight - 10;
-      
-      // Update CSS classes for fade indicators
       const element = scrollContainerRef.current;
-      if (hasScrollTop) {
-        element.classList.add('has-scroll-top');
-      } else {
-        element.classList.remove('has-scroll-top');
-      }
-      
-      if (hasScrollBottom) {
-        element.classList.add('has-scroll-bottom');
-      } else {
-        element.classList.remove('has-scroll-bottom');
-      }
+
+      if (hasScrollTop) element.classList.add('has-scroll-top'); else element.classList.remove('has-scroll-top');
+      if (hasScrollBottom) element.classList.add('has-scroll-bottom'); else element.classList.remove('has-scroll-bottom');
     }
   };
 
-  // Check scroll state on mount and when content changes
   useEffect(() => {
-    const checkScrollState = () => {
-      setTimeout(handleScroll, 100); // Small delay to ensure content is rendered
-    };
-    
+    const checkScrollState = () => setTimeout(handleScroll, 100);
     checkScrollState();
     window.addEventListener('resize', checkScrollState);
-    
-    return () => {
-      window.removeEventListener('resize', checkScrollState);
-    };
+    return () => window.removeEventListener('resize', checkScrollState);
   }, [collapsed, settings]);
 
+  // ---------------------------
+  // Base menu items (modify labels or badges as needed)
+  // ---------------------------
   const baseMenuItems = [
-    {
-      key: '/',
-      icon: <DashboardOutlined />,
-      label: t('nav.dashboard'),
-      badge: 3,
-    },
-    {
-      key: '/health',
-      icon: <HeartOutlined />,
-      label: t('nav.healthData'),
-      badge: 0,
-    },
-    {
-      key: '/water-quality',
-      icon: <ExperimentOutlined />,
-      label: t('nav.waterQuality'),
-      badge: 2,
-    },
-    {
-      key: '/disease-mapping',
-      icon: <EnvironmentOutlined />,
-      label: 'Disease Mapping',
-      badge: 1,
-    },
-    {
-      key: '/asha-communication',
-      icon: <MessageOutlined />,
-      label: 'ASHA Communication',
-      badge: 5,
-    },
-    {
-      key: '/ai-prediction',
-      icon: <RobotOutlined />,
-      label: 'Report Water Quality',
-      badge: 0,
-    },
-    {
-      key: '/alerts',
-      icon: <AlertOutlined />,
-      label: t('nav.alerts'),
-      badge: 8,
-    },
-    {
-      key: '/report-symptoms',
-      icon: <MedicineBoxOutlined />,
-      label: 'Report Symptoms',
-      badge: 0,
-    },
-    {
-      key: '/community',
-      icon: <TeamOutlined />,
-      label: t('nav.community'),
-      badge: 0,
-    },
-    {
-      key: '/education',
-      icon: <BookOutlined />,
-      label: t('nav.education'),
-      badge: 0,
-    },
-    {
-      key: '/reports',
-      icon: <FileTextOutlined />,
-      label: t('nav.reports'),
-      badge: 0,
-    },
+    { key: '/', icon: <DashboardOutlined />, label: t('nav.dashboard'), badge: 3 },
+    { key: '/health', icon: <HeartOutlined />, label: t('nav.healthData'), badge: 0 },
+    { key: '/water-quality', icon: <ExperimentOutlined />, label: t('nav.waterQuality'), badge: 2 },
+    { key: '/disease-mapping', icon: <EnvironmentOutlined />, label: 'Disease Mapping', badge: 1 },
+    { key: '/asha-communication', icon: <MessageOutlined />, label: 'ASHA Communication', badge: 5 },
+    { key: '/ai-prediction', icon: <RobotOutlined />, label: 'Report Water Quality', badge: 0 },
+    { key: '/alerts', icon: <AlertOutlined />, label: t('nav.alerts'), badge: 8 },
+    { key: '/report-symptoms', icon: <MedicineBoxOutlined />, label: 'Report Symptoms', badge: 0 },
+    { key: '/community', icon: <TeamOutlined />, label: t('nav.community'), badge: 0 },
+    { key: '/education', icon: <BookOutlined />, label: t('nav.education'), badge: 0 },
+    { key: '/reports', icon: <FileTextOutlined />, label: t('nav.reports'), badge: 0 },
   ];
 
-  // Sort menu items: pinned first, then favorites, then rest
+  // ---------------------------
+  // Role-based allowed keys
+  // ---------------------------
+  const allowedKeysForRole = (role?: string): string[] => {
+    const all = baseMenuItems.map(i => i.key);
+    if (!role) return ['/','/community'];
+
+    switch (role) {
+      case 'admin':
+        return all;
+      case 'asha_worker':
+        // ASHA: dashboard, asha communication, report water, report symptoms, alerts, education, community
+        return ['/', '/asha-communication', '/ai-prediction', '/report-symptoms', '/alerts', '/education', '/community'];
+      case 'community_user':
+        return ['/community', '/alerts', '/education'];
+      case 'healthcare_worker':
+        return ['/', '/health', '/disease-mapping', '/alerts'];
+      case 'district_health_official':
+        return ['/', '/disease-mapping', '/health', '/alerts', '/reports'];
+      case 'government_body':
+        // everything except ASHA-specific items
+        return all.filter(k => !['/asha-communication', '/ai-prediction', '/report-symptoms'].includes(k));
+      case 'volunteer':
+        return ['/', '/community', '/report-symptoms', '/alerts', '/education'];
+      default:
+        return ['/'];
+    }
+  };
+
+  // ---------------------------
+  // Sort (pinned/favorites) then filter by role
+  // ---------------------------
   const sortedMenuItems = [...baseMenuItems].sort((a, b) => {
     const aPinned = settings.pinnedItems.includes(a.key);
     const bPinned = settings.pinnedItems.includes(b.key);
@@ -216,7 +175,11 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
     return 0;
   });
 
-  const menuItems: MenuProps['items'] = sortedMenuItems.map(item => ({
+  const userRole = user?.role || 'community_user';
+  const allowedKeys = allowedKeysForRole(userRole);
+  const filteredMenuItems = sortedMenuItems.filter(item => allowedKeys.includes(item.key));
+
+  const menuItems: MenuProps['items'] = filteredMenuItems.map(item => ({
     key: item.key,
     icon: settings.showIcons ? (
       <Space size={4}>
@@ -229,29 +192,21 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
       <Space className="menu-item-content" style={{ width: '100%', justifyContent: 'space-between' }}>
         <span style={{ fontSize: settings.fontSize }}>{item.label}</span>
         <Space size={4}>
-          {settings.showBadges && item.badge > 0 && (
-            <Badge count={item.badge} size="small" />
-          )}
+          {settings.showBadges && item.badge > 0 && (<Badge count={item.badge} size="small" />)}
           <div className="menu-item-actions">
             <Button
               type="text"
               size="small"
               icon={<StarOutlined />}
               className={`action-btn ${settings.favoriteItems.includes(item.key) ? 'active' : ''}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleFavorite(item.key);
-              }}
+              onClick={(e) => { e.stopPropagation(); toggleFavorite(item.key); }}
             />
             <Button
               type="text"
               size="small"
               icon={<PushpinOutlined />}
               className={`action-btn ${settings.pinnedItems.includes(item.key) ? 'active' : ''}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                togglePin(item.key);
-              }}
+              onClick={(e) => { e.stopPropagation(); togglePin(item.key); }}
             />
           </div>
         </Space>
@@ -317,34 +272,19 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
         {/* User Profile */}
         {!collapsed && user && (
           <div className="user-profile">
-            <Avatar
-              size="large"
-              icon={<UserOutlined />}
-              src={user.avatar}
-              className="user-avatar"
-            />
+            <Avatar size="large" icon={<UserOutlined />} src={user.avatar} className="user-avatar" />
             <div className="user-info">
               <Text strong className="user-name">{user.name}</Text>
               <Text type="secondary" className="user-role">{user.role}</Text>
             </div>
             <Tooltip title="Logout">
-              <Button
-                type="text"
-                icon={<LogoutOutlined />}
-                onClick={logout}
-                className="logout-btn"
-              />
+              <Button type="text" icon={<LogoutOutlined />} onClick={logout} className="logout-btn" />
             </Tooltip>
           </div>
         )}
 
         {/* Scrollable Content */}
-        <div 
-          className="sidebar-scrollable-content"
-          ref={scrollContainerRef}
-          onScroll={handleScroll}
-        >
-          {/* Navigation Menu */}
+        <div className="sidebar-scrollable-content" ref={scrollContainerRef} onScroll={handleScroll}>
           <Menu
             mode="inline"
             selectedKeys={[location.pathname]}
@@ -354,17 +294,10 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
             inlineIndent={settings.compactMode ? 16 : 24}
           />
 
-          {/* Quick Actions */}
           {!collapsed && (
             <div className="quick-actions">
               <Tooltip title="Emergency Alert">
-                <Button
-                  type="primary"
-                  danger
-                  icon={<ThunderboltOutlined />}
-                  className="emergency-btn"
-                  block
-                >
+                <Button type="primary" danger icon={<ThunderboltOutlined />} className="emergency-btn" block>
                   Emergency
                 </Button>
               </Tooltip>
@@ -383,16 +316,11 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
         className="customization-drawer"
       >
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
-          {/* Theme Selection */}
           <div>
             <Text strong>Theme</Text>
             <div className="theme-options">
               {['light', 'dark', 'blue', 'purple', 'green'].map(theme => (
-                <Button
-                  key={theme}
-                  className={`theme-btn ${settings.theme === theme ? 'active' : ''}`}
-                  onClick={() => updateSettings('theme', theme)}
-                >
+                <Button key={theme} className={`theme-btn ${settings.theme === theme ? 'active' : ''}`} onClick={() => updateSettings('theme', theme)}>
                   {theme}
                 </Button>
               ))}
@@ -401,99 +329,61 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
 
           <Divider />
 
-          {/* Accent Color */}
           <div>
             <Text strong>Accent Color</Text>
-            <ColorPicker
-              value={settings.accentColor}
-              onChange={(color) => updateSettings('accentColor', color.toHexString())}
-              showText
-            />
+            <ColorPicker value={settings.accentColor} onChange={(color) => updateSettings('accentColor', color.toHexString())} showText />
           </div>
 
           <Divider />
 
-          {/* Font Size */}
           <div>
             <Text strong>Font Size: {settings.fontSize}px</Text>
-            <Slider
-              min={12}
-              max={18}
-              value={settings.fontSize}
-              onChange={(value) => updateSettings('fontSize', value)}
-            />
+            <Slider min={12} max={18} value={settings.fontSize} onChange={(value) => updateSettings('fontSize', value)} />
           </div>
 
           <Divider />
 
-          {/* Display Options */}
           <div>
             <Text strong>Display Options</Text>
             <Space direction="vertical" style={{ width: '100%', marginTop: 12 }}>
               <div className="setting-row">
                 <Text>Show Icons</Text>
-                <Switch
-                  checked={settings.showIcons}
-                  onChange={(checked) => updateSettings('showIcons', checked)}
-                />
+                <Switch checked={settings.showIcons} onChange={(checked) => updateSettings('showIcons', checked)} />
               </div>
               <div className="setting-row">
                 <Text>Show Badges</Text>
-                <Switch
-                  checked={settings.showBadges}
-                  onChange={(checked) => updateSettings('showBadges', checked)}
-                />
+                <Switch checked={settings.showBadges} onChange={(checked) => updateSettings('showBadges', checked)} />
               </div>
               <div className="setting-row">
                 <Text>Compact Mode</Text>
-                <Switch
-                  checked={settings.compactMode}
-                  onChange={(checked) => updateSettings('compactMode', checked)}
-                />
+                <Switch checked={settings.compactMode} onChange={(checked) => updateSettings('compactMode', checked)} />
               </div>
             </Space>
           </div>
 
           <Divider />
 
-          {/* Animation Level */}
           <div>
             <Text strong>Animation Level: {settings.animationLevel}</Text>
-            <Slider
-              min={0}
-              max={3}
-              value={settings.animationLevel}
-              onChange={(value) => updateSettings('animationLevel', value)}
-              marks={{
-                0: 'None',
-                1: 'Low',
-                2: 'Medium',
-                3: 'High'
-              }}
-            />
+            <Slider min={0} max={3} value={settings.animationLevel} onChange={(value) => updateSettings('animationLevel', value)} marks={{0: 'None',1:'Low',2:'Medium',3:'High'}} />
           </div>
 
           <Divider />
 
-          {/* Reset Settings */}
-          <Button
-            type="default"
-            block
-            onClick={() => {
-              const defaultSettings = {
-                theme: 'light' as const,
-                accentColor: '#1890ff',
-                fontSize: 14,
-                showIcons: true,
-                showBadges: true,
-                pinnedItems: ['/', '/dashboard'],
-                favoriteItems: [],
-                compactMode: false,
-                animationLevel: 2
-              };
-              setSettings(defaultSettings);
-            }}
-          >
+          <Button type="default" block onClick={() => {
+            const defaultSettings = {
+              theme: 'light' as const,
+              accentColor: '#1890ff',
+              fontSize: 14,
+              showIcons: true,
+              showBadges: true,
+              pinnedItems: ['/', '/dashboard'],
+              favoriteItems: [],
+              compactMode: false,
+              animationLevel: 2
+            };
+            setSettings(defaultSettings);
+          }}>
             Reset to Default
           </Button>
         </Space>

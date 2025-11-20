@@ -15,7 +15,7 @@ import Contact from './pages/Contact';
 import Dashboard from './pages/Dashboard';
 import HealthData from './pages/HealthData';
 import WaterQuality from './pages/WaterQuality';
-import Community from './pages/Community';
+//import Community from './pages/Community';
 import CommunityChat from './pages/CommunityChat';
 import Map from './pages/Map';
 import Gallery from './pages/Gallery';

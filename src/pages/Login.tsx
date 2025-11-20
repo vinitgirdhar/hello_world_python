@@ -43,18 +43,67 @@ const Login: React.FC = () => {
     };
   }, []);
 
+  // map role -> default landing route (change paths to match your router)
+  const roleToRoute = (role?: string) => {
+    switch (role) {
+      case 'asha_worker': return '/asha/dashboard';
+      case 'community_user': return '/community/home';
+      case 'healthcare_worker': return '/health/dashboard';
+      case 'district_health_official': return '/district/dashboard';
+      case 'government_body': return '/gov/dashboard';
+      case 'admin': return '/admin/dashboard';
+      case 'volunteer': return '/volunteer/home';
+      default: return '/dashboard';
+    }
+  };
+
+  //get stored user (AuthContext sets it in localStorage)
+  const getStoredUser = () => {
+    try {
+      const s = localStorage.getItem('paanicare-user');
+      return s ? JSON.parse(s) : null;
+    } catch {
+      return null;
+    }
+  };
+
   const onFinish = async (values: LoginFormData) => {
     setLoading(true);
     try {
-      await login(values.email, values.password);
+      const ok = await login(values.email, values.password);
+      if (!ok) {
+        message.error('Login failed! Check credentials.');
+        return;
+      }
+
+      // read stored user from localStorage (AuthProvider saved it there)
+      const stored = localStorage.getItem('paanicare-user');
+      const clientUser = stored ? JSON.parse(stored) : null;
+      const role = clientUser?.role || 'community_user';
+
+      // choose destination based on role (adjust these routes to your router)
+      const getHomeForRole = (r: string) => {
+        switch (r) {
+          case 'admin': return '/dashboard';
+          case 'asha_worker': return '/asha/dashboard';
+          case 'district_health_official': return '/dashboard';
+          case 'government_body': return '/dashboard';
+          case 'community_user': return '/community';
+          default: return '/dashboard';
+        }
+      };
+
+      const dest = from && from !== '/login' ? from : getHomeForRole(role);
       message.success('Login successful!');
-      navigate(from, { replace: true });
+      navigate(dest, { replace: true });
     } catch (error) {
+      console.error('Login error:', error);
       message.error('Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
   };
+
 
   const handleDemoLogin = async (role: string) => {
     setLoading(true);
@@ -71,9 +120,16 @@ const Login: React.FC = () => {
       
       const credentials = demoCredentials[role as keyof typeof demoCredentials];
       form.setFieldsValue(credentials);
-      await login(credentials.email, credentials.password);
+      const ok = await login(credentials.email, credentials.password);
+      if (!ok) {
+        message.error('Demo login failed.');
+        return;
+      }
+
+      // redirect based on role
+      const target = roleToRoute(role);
       message.success(`Logged in as ${role.replace('_', ' ')}`);
-      navigate(from, { replace: true });
+      navigate(target, { replace: true });
     } catch (error) {
       message.error('Demo login failed. Please try again.');
     } finally {

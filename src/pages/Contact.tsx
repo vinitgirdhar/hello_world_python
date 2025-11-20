@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { 
-  Card, 
-  Row, 
-  Col, 
-  Typography, 
-  Form, 
-  Input, 
-  Button, 
+import React, { useState } from "react";
+import {
+  Card,
+  Row,
+  Col,
+  Typography,
+  Form,
+  Input,
+  Button,
   Space,
   Divider,
-  notification
-} from 'antd';
-import { 
+  notification,
+} from "antd";
+import {
   MailOutlined,
   PhoneOutlined,
   EnvironmentOutlined,
@@ -19,10 +19,10 @@ import {
   GlobalOutlined,
   LinkedinOutlined,
   TwitterOutlined,
-  FacebookOutlined
-} from '@ant-design/icons';
-import { useTheme } from '../components/ThemeProvider';
-import './Contact.css';
+  FacebookOutlined,
+} from "@ant-design/icons";
+import { useTheme } from "../components/ThemeProvider";
+import "./Contact.css";
 
 const { Title, Paragraph, Text } = Typography;
 const { TextArea } = Input;
@@ -34,14 +34,15 @@ const Contact: React.FC = () => {
 
   const handleSubmit = async (values: any) => {
     setLoading(true);
-    
+
     // Simulate form submission
     setTimeout(() => {
       setLoading(false);
       form.resetFields();
       notification.success({
-        message: 'Message Sent!',
-        description: 'Thank you for contacting us. We will get back to you within 24 hours.',
+        message: "Message Sent!",
+        description:
+          "Thank you for contacting us. We will get back to you within 24 hours.",
         duration: 5,
       });
     }, 2000);
@@ -50,94 +51,96 @@ const Contact: React.FC = () => {
   const contactInfo = [
     {
       icon: <MailOutlined />,
-      title: 'Email',
-      description: 'Get in touch with us',
-      value: 'contact@paanicare.org',
-      link: 'mailto:contact@paanicare.org'
+      title: "Email",
+      description: "Get in touch with us",
+      value: "contact@nirogya.org",
+      link: "mailto:contact@nirogya.org",
     },
     {
       icon: <PhoneOutlined />,
-      title: 'Phone',
-      description: '24/7 Emergency Hotline',
-      value: '+91 98765 43210',
-      link: 'tel:+919876543210'
+      title: "Phone",
+      description: "24/7 Emergency Hotline",
+      value: "+91 8329789841",
+      link: "tel:+918329789841",
     },
     {
       icon: <EnvironmentOutlined />,
-      title: 'Head Office',
-      description: 'Visit our main office',
-      value: 'Block A, Tech Park, Bangalore, Karnataka 560001',
-      link: 'https://maps.google.com'
+      title: "Head Office",
+      description: "Visit our main office",
+      value:
+        "St. Francis Institute of Technology, Borivali (West), Maharashtra- 400103",
+      link: "https://maps.google.com",
     },
     {
       icon: <ClockCircleOutlined />,
-      title: 'Working Hours',
-      description: 'When we are available',
-      value: 'Mon-Fri: 9AM-6PM\nSat: 9AM-2PM',
-      link: null
-    }
+      title: "Working Hours",
+      description: "When we are available",
+      value: "Mon-Fri: 9AM-6PM\nSat: 9AM-2PM",
+      link: null,
+    },
   ];
 
   const offices = [
     {
-      city: 'Bangalore',
-      type: 'Head Office',
-      address: 'Block A, Tech Park, Bangalore, Karnataka 560001',
-      phone: '+91 98765 43210',
-      email: 'bangalore@paanicare.org'
+      city: "Mumbai",
+      type: "Head Office",
+      address:
+        "St. Francis Institute of Technology, Borivali (West), Maharashtra- 400103",
+      phone: "+91 8329789841",
+      email: "mumbai@nirogya.org",
     },
     {
-      city: 'Delhi',
-      type: 'Regional Office',
-      address: 'Sector 18, Connaught Place, New Delhi 110001',
-      phone: '+91 98765 43211',
-      email: 'delhi@paanicare.org'
+      city: "Delhi",
+      type: "Regional Office",
+      address: "Sector 18, Connaught Place, New Delhi 110001",
+      phone: "+91 98765 43211",
+      email: "delhi@nirogya.org",
     },
     {
-      city: 'Mumbai',
-      type: 'Field Office',
-      address: 'Andheri East, Mumbai, Maharashtra 400069',
-      phone: '+91 98765 43212',
-      email: 'mumbai@paanicare.org'
+      city: "Mumbai",
+      type: "Field Office",
+      address: "Andheri East, Mumbai, Maharashtra 400069",
+      phone: "+91 98765 43212",
+      email: "mumbai@nirogya.org",
     },
     {
-      city: 'Chennai',
-      type: 'Support Center',
-      address: 'Anna Nagar, Chennai, Tamil Nadu 600040',
-      phone: '+91 98765 43213',
-      email: 'chennai@paanicare.org'
-    }
+      city: "Chennai",
+      type: "Support Center",
+      address: "Anna Nagar, Chennai, Tamil Nadu 600040",
+      phone: "+91 98765 43213",
+      email: "chennai@nirogya.org",
+    },
   ];
 
   const socialLinks = [
     {
       icon: <LinkedinOutlined />,
-      name: 'LinkedIn',
-      url: 'https://linkedin.com/company/paanicare',
-      color: '#0077b5'
+      name: "LinkedIn",
+      url: "https://linkedin.com/company/nirogya",
+      color: "#0077b5",
     },
     {
       icon: <TwitterOutlined />,
-      name: 'Twitter',
-      url: 'https://twitter.com/paanicare',
-      color: '#1da1f2'
+      name: "Twitter",
+      url: "https://twitter.com/nirogya",
+      color: "#1da1f2",
     },
     {
       icon: <FacebookOutlined />,
-      name: 'Facebook',
-      url: 'https://facebook.com/paanicare',
-      color: '#4267B2'
+      name: "Facebook",
+      url: "https://facebook.com/nirogya",
+      color: "#4267B2",
     },
     {
       icon: <GlobalOutlined />,
-      name: 'Website',
-      url: 'https://paanicare.org',
-      color: '#52c41a'
-    }
+      name: "Website",
+      url: "https://nirogya.org",
+      color: "#3b82f6",
+    },
   ];
 
   return (
-    <div className={`contact-page ${isDark ? 'dark' : ''}`}>
+    <div className={`contact-page ${isDark ? "dark" : ""}`}>
       {/* Hero Section */}
       <section className="contact-hero">
         <div className="hero-content">
@@ -148,9 +151,9 @@ const Contact: React.FC = () => {
                   Get in Touch
                 </Title>
                 <Paragraph className="hero-subtitle">
-                  Ready to transform water surveillance in your community? 
-                  We're here to help you implement cutting-edge technology 
-                  for safer water systems.
+                  Ready to transform water surveillance in your community? We're
+                  here to help you implement cutting-edge technology for safer
+                  water systems.
                 </Paragraph>
               </Col>
             </Row>
@@ -171,9 +174,7 @@ const Contact: React.FC = () => {
                   <Col xs={24} sm={12} lg={6} key={index}>
                     <Card className="contact-info-card" hoverable>
                       <div className="contact-info-item">
-                        <div className="contact-icon">
-                          {info.icon}
-                        </div>
+                        <div className="contact-icon">{info.icon}</div>
                         <Title level={4} className="contact-title">
                           {info.title}
                         </Title>
@@ -209,10 +210,11 @@ const Contact: React.FC = () => {
                   Send us a Message
                 </Title>
                 <Paragraph className="form-description">
-                  Have a question or want to discuss how Paani Care can help your organization? 
-                  Fill out the form below and we'll get back to you within 24 hours.
+                  Have a question or want to discuss how Nirogya can help your
+                  organization? Fill out the form below and we'll get back to
+                  you within 24 hours.
                 </Paragraph>
-                
+
                 <Form
                   form={form}
                   layout="vertical"
@@ -224,7 +226,12 @@ const Contact: React.FC = () => {
                       <Form.Item
                         name="firstName"
                         label="First Name"
-                        rules={[{ required: true, message: 'Please enter your first name' }]}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter your first name",
+                          },
+                        ]}
                       >
                         <Input placeholder="John" />
                       </Form.Item>
@@ -233,60 +240,63 @@ const Contact: React.FC = () => {
                       <Form.Item
                         name="lastName"
                         label="Last Name"
-                        rules={[{ required: true, message: 'Please enter your last name' }]}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter your last name",
+                          },
+                        ]}
                       >
                         <Input placeholder="Doe" />
                       </Form.Item>
                     </Col>
                   </Row>
-                  
+
                   <Form.Item
                     name="email"
                     label="Email"
                     rules={[
-                      { required: true, message: 'Please enter your email' },
-                      { type: 'email', message: 'Please enter a valid email' }
+                      { required: true, message: "Please enter your email" },
+                      { type: "email", message: "Please enter a valid email" },
                     ]}
                   >
                     <Input placeholder="john.doe@example.com" />
                   </Form.Item>
-                  
-                  <Form.Item
-                    name="phone"
-                    label="Phone Number"
-                  >
+
+                  <Form.Item name="phone" label="Phone Number">
                     <Input placeholder="+91 98765 43210" />
                   </Form.Item>
-                  
-                  <Form.Item
-                    name="organization"
-                    label="Organization"
-                  >
+
+                  <Form.Item name="organization" label="Organization">
                     <Input placeholder="Your Organization" />
                   </Form.Item>
-                  
+
                   <Form.Item
                     name="subject"
                     label="Subject"
-                    rules={[{ required: true, message: 'Please enter a subject' }]}
+                    rules={[
+                      { required: true, message: "Please enter a subject" },
+                    ]}
                   >
                     <Input placeholder="How can we help you?" />
                   </Form.Item>
-                  
+
                   <Form.Item
                     name="message"
                     label="Message"
-                    rules={[{ required: true, message: 'Please enter your message' }]}
+                    rules={[
+                      { required: true, message: "Please enter your message" },
+                    ]}
                   >
-                    <TextArea 
-                      rows={6} 
-                      placeholder="Tell us about your water surveillance needs..." 
+                    <TextArea
+                      rows={6}
+                      placeholder="Tell us about your water surveillance needs..."
                     />
                   </Form.Item>
-                  
+
                   <Form.Item>
-                    <Button 
-                      type="primary" 
+                    <Button
+                      type="primary"
                       htmlType="submit"
                       loading={loading}
                       size="large"
@@ -298,7 +308,7 @@ const Contact: React.FC = () => {
                 </Form>
               </Card>
             </Col>
-            
+
             <Col xs={24} lg={12}>
               <Card className="map-card">
                 <Title level={4} className="map-title">
@@ -310,8 +320,9 @@ const Contact: React.FC = () => {
                     <EnvironmentOutlined className="map-icon" />
                     <Title level={4}>Interactive Map</Title>
                     <Paragraph>
-                      Block A, Tech Park<br />
-                      Bangalore, Karnataka 560001
+                      St. Francis Institute of Technology
+                      <br />
+                      Borivali (West), Maharashtra- 400103
                     </Paragraph>
                     <Button type="primary" icon={<EnvironmentOutlined />}>
                       Get Directions
@@ -331,9 +342,10 @@ const Contact: React.FC = () => {
             Our Offices
           </Title>
           <Paragraph className="section-description">
-            We have offices across India to better serve our clients and communities.
+            We have offices across India to better serve our clients and
+            communities.
           </Paragraph>
-          
+
           <Row gutter={[24, 24]}>
             {offices.map((office, index) => (
               <Col xs={24} sm={12} lg={6} key={index}>
@@ -344,27 +356,25 @@ const Contact: React.FC = () => {
                     </Title>
                     <Text className="office-type">{office.type}</Text>
                   </div>
-                  
+
                   <Divider />
-                  
+
                   <div className="office-details">
                     <div className="office-detail">
                       <EnvironmentOutlined className="detail-icon" />
                       <Text>{office.address}</Text>
                     </div>
-                    
+
                     <div className="office-detail">
                       <PhoneOutlined className="detail-icon" />
-                      <a href={`tel:${office.phone.replace(/\s/g, '')}`}>
+                      <a href={`tel:${office.phone.replace(/\s/g, "")}`}>
                         {office.phone}
                       </a>
                     </div>
-                    
+
                     <div className="office-detail">
                       <MailOutlined className="detail-icon" />
-                      <a href={`mailto:${office.email}`}>
-                        {office.email}
-                      </a>
+                      <a href={`mailto:${office.email}`}>{office.email}</a>
                     </div>
                   </div>
                 </Card>
@@ -384,10 +394,10 @@ const Contact: React.FC = () => {
                   Connect With Us
                 </Title>
                 <Paragraph className="social-description">
-                  Follow us on social media for the latest updates on water surveillance 
-                  technology and community health initiatives.
+                  Follow us on social media for the latest updates on water
+                  surveillance technology and community health initiatives.
                 </Paragraph>
-                
+
                 <Space size="large" className="social-links">
                   {socialLinks.map((social, index) => (
                     <Button
@@ -396,14 +406,17 @@ const Contact: React.FC = () => {
                       shape="circle"
                       size="large"
                       icon={social.icon}
-                      style={{ backgroundColor: social.color, borderColor: social.color }}
-                      onClick={() => window.open(social.url, '_blank')}
+                      style={{
+                        backgroundColor: social.color,
+                        borderColor: social.color,
+                      }}
+                      onClick={() => window.open(social.url, "_blank")}
                     />
                   ))}
                 </Space>
-                
+
                 <Divider />
-                
+
                 <div className="emergency-contact">
                   <Title level={4} className="emergency-title">
                     Emergency Response
@@ -411,9 +424,9 @@ const Contact: React.FC = () => {
                   <Paragraph>
                     For urgent water contamination alerts or emergency support:
                   </Paragraph>
-                  <Button 
-                    type="primary" 
-                    danger 
+                  <Button
+                    type="primary"
+                    danger
                     size="large"
                     icon={<PhoneOutlined />}
                   >

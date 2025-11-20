@@ -25,6 +25,8 @@ interface AuthContextType {
   register: (userData: RegisterData) => Promise<boolean>;
   logout: () => void;
   updateProfile: (userData: Partial<User>) => Promise<boolean>;
+  authHeaders: () => Record<string, string>;
+  fetchProfile: () => Promise<User | null>;
 }
 
 interface RegisterData {
@@ -52,9 +54,9 @@ export const useAuth = () => {
 const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
 interface AuthResponseUser {
-  id: string;
+  id?: string;
   full_name?: string;
-  email: string;
+  email?: string;
   role?: string;
   organization?: string;
   location?: string;
@@ -73,8 +75,54 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // helper to build auth headers
+  const authHeaders = (): Record<string, string> => {
+    const token = localStorage.getItem("paanicare-token");
+    return token ? { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } : { "Content-Type": "application/json" };
+  };
+
+  // centralized profile fetch
+  const fetchProfile = async (): Promise<User | null> => {
+    const token = localStorage.getItem("paanicare-token");
+    if (!token) return null;
+
+    try {
+      const res = await fetch(`${API_BASE}/api/auth/me`, {
+        headers: authHeaders()
+      });
+      if (!res.ok) {
+        // token invalid or endpoint not available
+        return null;
+      }
+      const profile = await res.json();
+      const mapped = mapBackendUserToClient(profile);
+      // persist
+      setUser(mapped);
+      localStorage.setItem("paanicare-user", JSON.stringify(mapped));
+      return mapped;
+    } catch (err) {
+      console.warn("fetchProfile error:", err);
+      return null;
+    }
+  };
+
+  // on mount: if token exists but user missing, try to fetch /api/auth/me
   useEffect(() => {
-    // Optionally: verify token with backend here on mount
+    const init = async () => {
+      const token = localStorage.getItem("paanicare-token");
+      const stored = localStorage.getItem("paanicare-user");
+      if (token && !stored) {
+        setIsLoading(true);
+        const prof = await fetchProfile();
+        if (!prof) {
+          // cleanup invalid token
+          saveUserAndToken(null, null);
+        }
+        setIsLoading(false);
+      }
+    };
+    init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const saveUserAndToken = (u: User | null, token?: string | null) => {
@@ -115,29 +163,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return false;
       }
 
-      // store token
+      // store token immediately so next requests can use it
       localStorage.setItem("paanicare-token", token);
 
-      // If backend returns user info, use it; otherwise try to fetch /api/users/me (not implemented by default)
+      // If backend returns user info, use it; otherwise try to fetch /api/auth/me
       let storedUser: User | null = null;
       if (data.user) {
         storedUser = mapBackendUserToClient(data.user);
       } else {
-        // try get profile (if your backend provides /api/auth/me or /api/users/me)
-        try {
-          const profileRes = await fetch(`${API_BASE}/api/users/me`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          if (profileRes.ok) {
-            const profileJson = await profileRes.json();
-            storedUser = mapBackendUserToClient(profileJson);
-          }
-        } catch {
-          /* ignore */
-        }
+        // try to fetch profile using saved token
+        storedUser = await fetchProfile();
       }
 
-      // fallback minimal user
+      // fallback minimal user if profile missing
       if (!storedUser) {
         storedUser = {
           id: Date.now().toString(),
@@ -207,8 +245,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       // Build client-side user object from backend response
       const clientUser: User = {
-        id: created.id || (created as any)._id || Date.now().toString(),
-        email: created.email,
+        id: (created as any).id || (created as any)._id || Date.now().toString(),
+        email: created.email || userData.email,
         name: (created as any).full_name || userData.name,
         role: (created as any).role || userData.role,
         organization: (created as any).organization || userData.organization,
@@ -238,7 +276,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (!user) return false;
     setIsLoading(true);
     try {
-      // optimistic local update; optionally send to backend if you have a users update API
       const updated = { ...user, ...userData };
       setUser(updated);
       localStorage.setItem("paanicare-user", JSON.stringify(updated));
@@ -254,9 +291,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const mapBackendUserToClient = (b: any): User => {
     return {
-      id: b.id || b._id || String(b._id),
-      email: b.email,
-      name: b.full_name || b.name || b.email.split("@")[0],
+      id: b.id || b._id || String((b as any)?._id ?? Date.now()),
+      email: b.email || "",
+      name: b.full_name || b.name || (b.email ? b.email.split("@")[0] : "user"),
       role: (b.role as User["role"]) || "community_user",
       organization: b.organization,
       location: b.location,
@@ -272,6 +309,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     register,
     logout,
     updateProfile,
+    authHeaders,
+    fetchProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

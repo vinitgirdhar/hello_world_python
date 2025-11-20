@@ -156,54 +156,23 @@
   margin-bottom: 24px;
 }
 
-.logo-container {
-  position: relative;
-  display: inline-block;
-  margin-bottom: 20px;
+.login-logo .nirogya-logo {
+  gap: 20px;
 }
 
-.logo-icon {
-  font-size: 4rem;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: logoFloat 3s ease-in-out infinite;
-  position: relative;
-  z-index: 2;
+.login-logo .nirogya-logo__title {
+  font-size: 2.2rem;
+  letter-spacing: 0.05em;
 }
 
-.logo-waves {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1;
+.login-logo .nirogya-logo__tagline {
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: rgba(0, 0, 0, 0.5);
 }
 
-.wave {
-  position: absolute;
-  border: 2px solid rgba(102, 126, 234, 0.3);
-  border-radius: 50%;
-  animation: waveAnimation 3s ease-in-out infinite;
-}
-
-.wave-1 {
-  width: 80px;
-  height: 80px;
-  animation-delay: 0s;
-}
-
-.wave-2 {
-  width: 100px;
-  height: 100px;
-  animation-delay: 0.5s;
-}
-
-.wave-3 {
-  width: 120px;
-  height: 120px;
-  animation-delay: 1s;
+.login-page.dark .login-logo .nirogya-logo__tagline {
+  color: rgba(255, 255, 255, 0.65);
 }
 
 .login-title {
@@ -556,25 +525,6 @@
   }
 }
 
-@keyframes logoFloat {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes waveAnimation {
-  0% {
-    transform: translate(-50%, -50%) scale(0.8);
-    opacity: 0.8;
-  }
-  50% {
-    opacity: 0.4;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1.2);
-    opacity: 0;
-  }
-}
-
 @keyframes slideDown {
   from {
     opacity: 0;
@@ -596,13 +546,14 @@
     font-size: 1.8rem !important;
   }
   
-  .logo-icon {
-    font-size: 3rem;
+  .login-logo .nirogya-logo__title {
+    font-size: 2rem;
   }
   
-  .wave-1 { width: 60px; height: 60px; }
-  .wave-2 { width: 80px; height: 80px; }
-  .wave-3 { width: 100px; height: 100px; }
+  .login-logo .nirogya-logo__tagline {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+  }
   
   .floating-element {
     font-size: 1.5rem;
