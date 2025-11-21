@@ -43,18 +43,10 @@ const Login: React.FC = () => {
     };
   }, []);
 
-  // map role -> default landing route (change paths to match your router)
+  // map role -> default landing route (all roles now go to /dashboard)
   const roleToRoute = (role?: string) => {
-    switch (role) {
-      case 'asha_worker': return '/asha/dashboard';
-      case 'community_user': return '/community/home';
-      case 'healthcare_worker': return '/health/dashboard';
-      case 'district_health_official': return '/district/dashboard';
-      case 'government_body': return '/gov/dashboard';
-      case 'admin': return '/admin/dashboard';
-      case 'volunteer': return '/volunteer/home';
-      default: return '/dashboard';
-    }
+    // All roles use the main dashboard which shows role-specific views
+    return '/dashboard';
   };
 
   //get stored user (AuthContext sets it in localStorage)
@@ -81,19 +73,8 @@ const Login: React.FC = () => {
       const clientUser = stored ? JSON.parse(stored) : null;
       const role = clientUser?.role || 'community_user';
 
-      // choose destination based on role (adjust these routes to your router)
-      const getHomeForRole = (r: string) => {
-        switch (r) {
-          case 'admin': return '/dashboard';
-          case 'asha_worker': return '/asha/dashboard';
-          case 'district_health_official': return '/dashboard';
-          case 'government_body': return '/dashboard';
-          case 'community_user': return '/community';
-          default: return '/dashboard';
-        }
-      };
-
-      const dest = from && from !== '/login' ? from : getHomeForRole(role);
+      // All roles go to /dashboard which shows role-specific views
+      const dest = from && from !== '/login' ? from : '/dashboard';
       message.success('Login successful!');
       navigate(dest, { replace: true });
     } catch (error) {

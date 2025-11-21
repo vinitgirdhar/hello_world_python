@@ -89,7 +89,7 @@ async def login(payload: UserLogin):
 
     # minimal user object to return to frontend
     user_out = {
-        "id": str(user["_1d"] if "_1d" in user else user.get("_id")),  # defensive: prefer _id but keep safe
+        "id": str(user["_id"]),
         "email": user.get("email"),
         "role": user.get("role"),
         "full_name": user.get("full_name"),
@@ -97,10 +97,6 @@ async def login(payload: UserLogin):
         "location": user.get("location"),
         "phone": user.get("phone"),
     }
-
-    # ensure correct id field (fix common issue if doc uses _id)
-    if not user_out["id"] and user.get("_id"):
-        user_out["id"] = str(user["_id"])
 
     return {
         "access_token": token,
