@@ -1,11 +1,15 @@
 import React, { useMemo, useState } from 'react';
+import { Spin, Empty, Badge, Button, message } from 'antd';
+import { ReloadOutlined, BellOutlined } from '@ant-design/icons';
+import { useAlerts } from '../contexts/AlertContext';
+import AlertNotificationPopup from '../components/AlertNotificationPopup';
 import './Alerts.css';
 
 type Priority = 'critical' | 'high' | 'medium' | 'low';
-type Status = 'active' | 'monitoring' | 'resolved';
+type Status = 'active' | 'monitoring' | 'resolved' | 'sending' | 'sent' | 'pending';
 
 type Alert = {
-  id: number;
+  id: string;
   title: string;
   priority: Priority;
   location: string;
@@ -13,11 +17,17 @@ type Alert = {
   description: string;
   affected: string;
   status: Status;
+  created_by?: string;
+  created_by_role?: string;
+  severity?: string;
+  region?: string;
+  created_at?: string;
 };
 
+// Keep sample alerts as fallback
 const sampleAlerts: Alert[] = [
   {
-    id: 1,
+    id: '1',
     title: 'Contaminated Water Source - Village A',
     priority: 'critical',
     location: 'Village A, Block 3',
@@ -28,7 +38,7 @@ const sampleAlerts: Alert[] = [
     status: 'active',
   },
   {
-    id: 2,
+    id: '2',
     title: 'Cluster of Gastroenteritis Cases',
     priority: 'high',
     location: 'Primary School, Ward 5',
@@ -39,7 +49,7 @@ const sampleAlerts: Alert[] = [
     status: 'monitoring',
   },
   {
-    id: 3,
+    id: '3',
     title: 'Vaccination Drive Scheduled',
     priority: 'low',
     location: 'Community Center, Zone B',
@@ -49,46 +59,104 @@ const sampleAlerts: Alert[] = [
     affected: 'Voluntary',
     status: 'resolved',
   },
-  {
-    id: 4,
-    title: 'Routine Backup Completed',
-    priority: 'medium',
-    location: 'Central Database',
-    time: '3 hours ago',
-    description: 'Daily data backup completed successfully; no action required.',
-    affected: 'N/A',
-    status: 'resolved',
-  },
 ];
 
-const stats = [
-  { label: 'Active Alerts', value: '4', note: 'requiring attention', key: 'active' },
-  { label: 'Open Investigations', value: '2', note: 'in progress', key: 'investigations' },
-  { label: 'Resolved Today', value: '6', note: 'closed cases', key: 'resolved' },
-  { label: 'System Health', value: '99%', note: 'uptime', key: 'health' },
-];
+const FILTERS = ['all', 'critical', 'high', 'medium', 'low', 'active', 'sent', 'pending'] as const;
 
-const FILTERS = ['all', 'critical', 'high', 'medium', 'low', 'active', 'monitoring', 'resolved'] as const;
+// Helper function
+function getTimeAgo(dateStr: string): string {
+  const date = new Date(dateStr);
+  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+  
+  if (seconds < 60) return 'Just now';
+  if (seconds < 3600) return `${Math.floor(seconds / 60)} minutes ago`;
+  if (seconds < 86400) return `${Math.floor(seconds / 3600)} hours ago`;
+  return `${Math.floor(seconds / 86400)} days ago`;
+}
 
 const Alerts: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<string>('all');
+  const [selectedAlert, setSelectedAlert] = useState<any>(null);
+  const [showAlertPopup, setShowAlertPopup] = useState(false);
+  
+  const { alerts: backendAlerts, unreadCount, fetchAlerts, acknowledgeAlert, isLoading } = useAlerts();
+
+  // Convert backend alerts to display format
+  const displayAlerts: Alert[] = useMemo(() => {
+    if (backendAlerts.length === 0) return sampleAlerts;
+    
+    return backendAlerts.map(alert => ({
+      id: alert.id,
+      title: alert.title,
+      priority: (alert.severity as Priority) || 'medium',
+      location: alert.region || 'Unknown',
+      time: alert.created_at ? getTimeAgo(alert.created_at) : 'Unknown',
+      description: alert.description,
+      affected: `Users in ${alert.region}`,
+      status: (alert.status as Status) || 'active',
+      created_by: alert.created_by,
+      created_by_role: alert.created_by_role,
+      severity: alert.severity,
+      region: alert.region,
+      created_at: alert.created_at
+    }));
+  }, [backendAlerts]);
 
   const filtered = useMemo(() => {
-    if (activeFilter === 'all') return sampleAlerts;
-    return sampleAlerts.filter((a) => a.priority === activeFilter || a.status === activeFilter);
-  }, [activeFilter]);
+    if (activeFilter === 'all') return displayAlerts;
+    return displayAlerts.filter((a) => a.priority === activeFilter || a.status === activeFilter);
+  }, [activeFilter, displayAlerts]);
+
+  const stats = useMemo(() => [
+    { label: 'Active Alerts', value: String(displayAlerts.filter(a => a.status !== 'resolved').length), note: 'requiring attention', key: 'active' },
+    { label: 'Unread', value: String(unreadCount), note: 'new alerts', key: 'unread' },
+    { label: 'Critical', value: String(displayAlerts.filter(a => a.priority === 'critical').length), note: 'high priority', key: 'critical' },
+    { label: 'Total Alerts', value: String(displayAlerts.length), note: 'all time', key: 'total' },
+  ], [displayAlerts, unreadCount]);
+
+  const handleViewAlert = (alert: Alert) => {
+    setSelectedAlert({
+      id: alert.id,
+      title: alert.title,
+      description: alert.description,
+      region: alert.location,
+      severity: alert.priority,
+      created_by: alert.created_by || 'Health Official',
+      created_by_role: alert.created_by_role || 'asha_worker',
+      created_at: alert.created_at || new Date().toISOString(),
+      status: alert.status
+    });
+    setShowAlertPopup(true);
+  };
+
+  const handleAcknowledge = (alertId: string) => {
+    acknowledgeAlert(alertId);
+    message.success('Alert acknowledged');
+  };
 
   return (
     <div className="alerts-page">
       <header className="alerts-hero">
         <div className="container hero-inner">
-          <div className="brand">Nirogya</div>
+          <div className="brand">
+            <Badge count={unreadCount} offset={[10, 0]}>
+              <BellOutlined style={{ fontSize: 20, color: 'white' }} />
+            </Badge>
+            &nbsp; Nirogya
+          </div>
           <div className="hero-title-block">
             <h1 className="hero-title">Health Alerts & Incident Management</h1>
             <p className="hero-subtitle">
-              Centralised view for community health incidents — water safety, outbreak clusters, and operational notifications.
+              Real-time water quality alerts and community health notifications from ASHA workers and health officials.
             </p>
           </div>
+          <Button 
+            icon={<ReloadOutlined spin={isLoading} />} 
+            onClick={() => fetchAlerts()}
+            style={{ background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white' }}
+          >
+            Refresh
+          </Button>
         </div>
       </header>
 
@@ -96,7 +164,7 @@ const Alerts: React.FC = () => {
         <section className="alerts-stats-section" aria-label="Alert summary statistics">
           <div className="alerts-stats-grid">
             {stats.map((s) => (
-              <div key={s.key} className="alert-stat-card">
+              <div key={s.key} className={`alert-stat-card ${s.key === 'unread' && unreadCount > 0 ? 'highlight' : ''}`}>
                 <div className="stat-number">{s.value}</div>
                 <div className="stat-label">{s.label}</div>
                 <div className="stat-note">{s.note}</div>
@@ -124,48 +192,72 @@ const Alerts: React.FC = () => {
         </section>
 
         <section className="alerts-list-section" aria-label="Alerts list">
-          <h2 className="section-title">Incidents & Alerts</h2>
-          <p className="section-subtitle">Sorted by most recent — click any item for full details or actions.</p>
+          <h2 className="section-title">
+            Water Quality Alerts & Incidents
+            {isLoading && <Spin size="small" style={{ marginLeft: 12 }} />}
+          </h2>
+          <p className="section-subtitle">
+            Real-time alerts from ASHA workers and health officials. Click any alert for full details.
+          </p>
 
-          <div className="alerts-list" role="list">
-            {filtered.map((a) => (
-              <article
-                key={a.id}
-                role="listitem"
-                className={`alert-card ${a.priority} ${a.status === 'resolved' ? 'resolved' : ''}`}
-                tabIndex={0}
-                aria-labelledby={`alert-title-${a.id}`}
-              >
-                <div className="alert-header">
-                  <div className="alert-title-section">
-                    <h3 id={`alert-title-${a.id}`} className="alert-title">{a.title}</h3>
-                    <div className="alert-meta-top">
-                      <span className="meta-text">{a.location}</span>
-                      <span className="meta-sep">•</span>
-                      <span className="meta-text">{a.time}</span>
+          {filtered.length === 0 ? (
+            <Empty description="No alerts found" />
+          ) : (
+            <div className="alerts-list" role="list">
+              {filtered.map((a) => (
+                <article
+                  key={a.id}
+                  role="listitem"
+                  className={`alert-card ${a.priority} ${a.status === 'resolved' ? 'resolved' : ''}`}
+                  tabIndex={0}
+                  aria-labelledby={`alert-title-${a.id}`}
+                  onClick={() => handleViewAlert(a)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div className="alert-header">
+                    <div className="alert-title-section">
+                      <h3 id={`alert-title-${a.id}`} className="alert-title">{a.title}</h3>
+                      <div className="alert-meta-top">
+                        <span className="meta-text">{a.location}</span>
+                        <span className="meta-sep">•</span>
+                        <span className="meta-text">{a.time}</span>
+                        {a.created_by && (
+                          <>
+                            <span className="meta-sep">•</span>
+                            <span className="meta-text">by {a.created_by}</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className={`priority-chip ${a.priority}`}>{a.priority.toUpperCase()}</div>
+                  </div>
+
+                  <p className="alert-description">{a.description}</p>
+
+                  <div className="alert-footer">
+                    <div className="meta-item"><strong>Affected:</strong>&nbsp;{a.affected}</div>
+                    <div className="meta-item"><strong>Status:</strong>&nbsp;<span className="status-text">{a.status}</span></div>
+
+                    <div className="actions">
+                      <button className="btn-outline" onClick={(e) => { e.stopPropagation(); handleViewAlert(a); }}>View</button>
+                      <button className="btn-primary" onClick={(e) => { e.stopPropagation(); handleAcknowledge(a.id); }}>Acknowledge</button>
                     </div>
                   </div>
-
-                  <div className={`priority-chip ${a.priority}`}>{a.priority.toUpperCase()}</div>
-                </div>
-
-                <p className="alert-description">{a.description}</p>
-
-                <div className="alert-footer">
-                  <div className="meta-item"><strong>Affected:</strong>&nbsp;{a.affected}</div>
-                  <div className="meta-item"><strong>Status:</strong>&nbsp;<span className="status-text">{a.status}</span></div>
-
-                  {/* Action buttons placeholder (wire to real actions later) */}
-                  <div className="actions">
-                    <button className="btn-outline">View</button>
-                    <button className="btn-primary">Acknowledge</button>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
+                </article>
+              ))}
+            </div>
+          )}
         </section>
       </main>
+
+      {/* Alert Detail Popup */}
+      <AlertNotificationPopup
+        alert={selectedAlert}
+        visible={showAlertPopup}
+        onClose={() => setShowAlertPopup(false)}
+        onAcknowledge={handleAcknowledge}
+      />
     </div>
   );
 };

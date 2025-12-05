@@ -160,3 +160,30 @@
   .hero-title { font-size:1.2rem; }
   .priority-chip { padding:5px 8px; font-size:0.75rem; }
 }
+
+/* Highlight card for unread alerts */
+.alert-stat-card.highlight {
+  background: linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%);
+  color: white;
+  animation: pulse-highlight 2s ease-in-out infinite;
+}
+
+.alert-stat-card.highlight .stat-number,
+.alert-stat-card.highlight .stat-label,
+.alert-stat-card.highlight .stat-note {
+  color: white;
+}
+
+@keyframes pulse-highlight {
+  0%, 100% { transform: scale(1); box-shadow: 0 6px 18px rgba(255, 77, 79, 0.3); }
+  50% { transform: scale(1.02); box-shadow: 0 8px 24px rgba(255, 77, 79, 0.5); }
+}
+
+/* Alert card click effect */
+.alert-card {
+  cursor: pointer;
+}
+
+.alert-card:active {
+  transform: scale(0.98);
+}

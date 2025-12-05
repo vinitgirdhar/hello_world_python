@@ -1,0 +1,155 @@
+/* src/components/AlertNotificationPopup.css */
+
+.alert-notification-popup .ant-modal-content {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.alert-notification-popup .ant-modal-body {
+  padding: 0;
+}
+
+.alert-notification-popup .ant-modal-close {
+  top: 12px;
+  right: 12px;
+}
+
+/* Severity-based animations */
+.alert-notification-popup.severity-critical .alert-popup-header,
+.alert-notification-popup.severity-high .alert-popup-header {
+  animation: pulseHeader 2s ease-in-out infinite;
+}
+
+@keyframes pulseHeader {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+/* Header */
+.alert-popup-header {
+  padding: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.alert-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  animation: bounce 1s ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.alert-header-content {
+  flex: 1;
+}
+
+/* Body */
+.alert-popup-body {
+  padding: 24px;
+}
+
+.alert-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.alert-meta-row .anticon {
+  font-size: 16px;
+}
+
+.alert-description-section {
+  margin-top: 16px;
+}
+
+.alert-message-box {
+  background: #fafafa;
+  border-left: 4px solid #ff4d4f;
+  padding: 16px;
+  border-radius: 0 8px 8px 0;
+  margin-top: 8px;
+}
+
+.safety-instructions {
+  margin-top: 20px;
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.safety-instructions ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.safety-instructions li {
+  margin-bottom: 6px;
+  color: #389e0d;
+}
+
+/* Footer */
+.alert-popup-footer {
+  padding: 16px 24px;
+  background: #fafafa;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Slide in animation */
+.alert-notification-popup .ant-modal {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Critical shake effect */
+.severity-critical .alert-icon-wrapper {
+  animation: shake 0.5s ease-in-out, bounce 1s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Dark mode */
+[data-theme="dark"] .alert-popup-body {
+  background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .alert-message-box {
+  background: var(--bg-primary);
+}
+
+[data-theme="dark"] .alert-popup-footer {
+  background: var(--bg-primary);
+}
+
+[data-theme="dark"] .safety-instructions {
+  background: rgba(56, 158, 13, 0.1);
+  border-color: rgba(56, 158, 13, 0.3);
+}

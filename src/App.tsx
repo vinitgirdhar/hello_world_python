@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { AlertProvider } from './contexts/AlertContext';
 import { ThemeProvider } from './components/ThemeProvider';
 import { LanguageProvider } from './contexts/LanguageContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -34,29 +35,30 @@ import './locales';
 function App() {
   return (
     <AuthProvider>
-      <ThemeProvider>
-        <LanguageProvider>
-          <Router>
-            <Routes>
+      <AlertProvider>
+        <ThemeProvider>
+          <LanguageProvider>
+            <Router>
+              <Routes>
 
-              {/* Public pages */}
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
+                {/* Public pages */}
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
 
-              {/* Public pages with layout */}
-              <Route path="/about" element={
-                <PublicLayout>
-                  <About />
-                </PublicLayout>
-              } />
+                {/* Public pages with layout */}
+                <Route path="/about" element={
+                  <PublicLayout>
+                    <About />
+                  </PublicLayout>
+                } />
 
-              <Route path="/contact" element={
-                <PublicLayout>
-                  <Contact />
-                </PublicLayout>
-              } />
+                <Route path="/contact" element={
+                  <PublicLayout>
+                    <Contact />
+                  </PublicLayout>
+                } />
 
               <Route path="/map" element={
                 <PublicLayout>
@@ -176,6 +178,7 @@ function App() {
           </Router>
         </LanguageProvider>
       </ThemeProvider>
+      </AlertProvider>
     </AuthProvider>
   );
 }
