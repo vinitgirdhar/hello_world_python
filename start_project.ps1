@@ -46,11 +46,11 @@ Write-Host "`n[3/4] Starting Servers..." -ForegroundColor Yellow
 
 # Start Backend
 Write-Host "Launching Backend (FastAPI)..."
-Start-Process -FilePath (Join-Path $backend "venv\Scripts\python.exe") -ArgumentList "-m uvicorn backend.app:app --reload --port 8000" -WorkingDirectory $root
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$root'; & '$backend\venv\Scripts\activate.ps1'; python -m uvicorn backend.app:app --reload --port 8000"
 
 # Start Frontend
 Write-Host "Launching Frontend (React)..."
-Start-Process -FilePath "npm" -ArgumentList "start" -WorkingDirectory $root
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$root'; npm start"
 
 Write-Host "`n[4/4] Done! Check the new terminal windows." -ForegroundColor Green
 Write-Host "Backend: http://localhost:8000/docs"

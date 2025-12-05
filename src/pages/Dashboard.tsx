@@ -1,5 +1,5 @@
 // src/pages/Dashboard.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { Row, Col, Card, Statistic, Table, Tag, Progress, Timeline, List, Button, Empty } from 'antd';
 import { 
   ArrowUpOutlined, 
@@ -10,12 +10,14 @@ import {
   ClockCircleOutlined,
   BellOutlined,
   FileTextOutlined,
-  BookOutlined
+  BookOutlined,
+  NotificationOutlined
 } from '@ant-design/icons';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../components/ThemeProvider';
 import { useAuth } from '../contexts/AuthContext';
+import WaterAlertModal from '../components/WaterAlertModal';
 import './Dashboard.css';
 
 // Mock data (kept from your original file)
@@ -101,6 +103,8 @@ const AshaView: React.FC = () => {
   // You can replace these with real API calls later.
   const recentWater = waterQualityData.slice(0, 6);
   const recentPreds = diseaseDistribution.slice(0, 4);
+  const [alertModalVisible, setAlertModalVisible] = useState(false);
+  const { user } = useAuth();
 
   return (
     <div className="dashboard">
@@ -108,6 +112,45 @@ const AshaView: React.FC = () => {
         <h1>ASHA Dashboard</h1>
         <p className="dashboard-sub">Overview of tests and local alerts</p>
       </div>
+
+      {/* Water Quality Alert Banner */}
+      <Card 
+        className="alert-banner-card"
+        style={{ 
+          marginBottom: 16, 
+          background: 'linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%)',
+          border: 'none'
+        }}
+      >
+        <Row align="middle" justify="space-between">
+          <Col>
+            <div style={{ color: 'white' }}>
+              <h3 style={{ color: 'white', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <NotificationOutlined /> Water Quality Alert System
+              </h3>
+              <p style={{ margin: '8px 0 0 0', opacity: 0.9 }}>
+                Send immediate alerts to community members about water quality issues
+              </p>
+            </div>
+          </Col>
+          <Col>
+            <Button 
+              size="large"
+              icon={<AlertOutlined />}
+              onClick={() => setAlertModalVisible(true)}
+              style={{ 
+                background: 'white', 
+                color: '#ff4d4f', 
+                fontWeight: 'bold',
+                border: 'none',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+              }}
+            >
+              Send Water Alert
+            </Button>
+          </Col>
+        </Row>
+      </Card>
 
       <Row gutter={[16, 16]} className="stats-row">
         <Col xs={24} sm={12} md={8}>
@@ -165,12 +208,29 @@ const AshaView: React.FC = () => {
 
           <Card className="chart-card" style={{ marginTop: 16 }}>
             <h3 style={{ marginBottom: 8 }}>Quick Actions</h3>
+            <Button 
+              type="primary" 
+              danger
+              block 
+              style={{ marginBottom: 8 }}
+              icon={<AlertOutlined />}
+              onClick={() => setAlertModalVisible(true)}
+            >
+              🚨 Send Water Quality Alert
+            </Button>
             <Button type="primary" block style={{ marginBottom: 8 }}>Report Water Quality</Button>
             <Button block style={{ marginBottom: 8 }}>Report Symptoms</Button>
             <Button block>View My Submissions</Button>
           </Card>
         </Col>
       </Row>
+
+      {/* Water Alert Modal */}
+      <WaterAlertModal 
+        visible={alertModalVisible}
+        onClose={() => setAlertModalVisible(false)}
+        userLocation={user?.location}
+      />
     </div>
   );
 };

@@ -63,6 +63,8 @@ from backend.services.mongo_client import symptom_col, water_col, prediction_col
 from backend.services.predictor import predict_disease, _model as LOADED_MODEL
 from backend.services.merger import merge_and_predict_and_store
 from backend.auth.routes import router as auth_router
+from backend.auth.otp_routes import router as otp_router
+from backend.auth.alert_routes import router as alert_router
 
 # CONFIG
 POLL_INTERVAL_SECONDS = int(os.getenv("POLL_INTERVAL_SECONDS", "5"))
@@ -86,6 +88,8 @@ app.add_middleware(
 
 # mount auth routes
 app.include_router(auth_router)
+app.include_router(otp_router)
+app.include_router(alert_router)
 
 # ML availability flag
 ML_READY = True if LOADED_MODEL is not None else False

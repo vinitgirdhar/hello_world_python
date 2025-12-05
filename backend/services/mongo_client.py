@@ -21,5 +21,9 @@ raw_col = db["raw_reports"]
 # users collection (for auth)
 users_col = db["users"]
 
+# OTP and Alert collections
+otp_col = db["email_otps"]
+alerts_col = db["water_alerts"]
+
 def get_db():
     return db

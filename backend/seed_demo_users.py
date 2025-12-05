@@ -71,6 +71,73 @@ DEMO_USERS = [
         "organization": None,
         "location": "Local Village",
         "phone": "+91-9999999993"
+    },
+    # Add your test user here
+    {
+        "full_name": "Vinit Girdhar",
+        "email": "girdharvinit786@gmail.com",
+        "password": "test123",
+        "role": "asha_worker",  # ASHA worker role so you can test alerts
+        "organization": "Community Health Center",
+        "location": "Kamrup Metro",  # Same region for alert testing
+        "phone": "+91-7840926064"
+    },
+    # ============================================
+    # SFIT TEAM TEST USERS - For Alert Testing
+    # ============================================
+    {
+        "full_name": "Shini Edabre",
+        "email": "shiniedabre03@student.sfit.ac.in",
+        "password": "test123",
+        "role": "community_user",
+        "organization": "SFIT",
+        "location": "Kamrup Metro",
+        "phone": "+91-9699852663"
+    },
+    {
+        "full_name": "Lizer Viji",
+        "email": "lizerviji80@student.sfit.ac.in",
+        "password": "test123",
+        "role": "community_user",
+        "organization": "SFIT",
+        "location": "Kamrup Metro",
+        "phone": "+91-8329789841"
+    },
+    {
+        "full_name": "Vinit Girdhar (SFIT)",
+        "email": "girdharvinit786@student.sfit.ac.in",
+        "password": "test123",
+        "role": "community_user",
+        "organization": "SFIT",
+        "location": "Kamrup Metro",
+        "phone": "+91-7840926064"
+    },
+    {
+        "full_name": "Dalmet Isona",
+        "email": "dalmetisona23@student.sfit.ac.in",
+        "password": "test123",
+        "role": "community_user",
+        "organization": "SFIT",
+        "location": "Kamrup Metro",
+        "phone": "+91-8855880379"
+    },
+    {
+        "full_name": "Maxwell Mathew",
+        "email": "mathew.maxwell5035@student.sfit.ac.in",
+        "password": "test123",
+        "role": "community_user",
+        "organization": "SFIT",
+        "location": "Kamrup Metro",
+        "phone": "+91-9834101480"
+    },
+    {
+        "full_name": "Aaditya Parab",
+        "email": "parabaaditya785@student.sfit.ac.in",
+        "password": "test123",
+        "role": "community_user",
+        "organization": "SFIT",
+        "location": "Kamrup Metro",
+        "phone": "+91-7843046341"
     }
 ]
 

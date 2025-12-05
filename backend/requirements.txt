@@ -8,6 +8,7 @@ numpy
 scikit-learn
 joblib
 lightgbm
+resend
 # auth and validation dependencies
 passlib[bcrypt]
 bcrypt==4.0.1
