@@ -27,7 +27,17 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
+class UserTokenInfo(BaseModel):
+    id: str
+    email: EmailStr
+    role: str
+    full_name: Optional[str] = None
+    organization: Optional[str] = None
+    location: Optional[str] = None
+    phone: Optional[str] = None
+
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
     expires_in: int
+    user: Optional[UserTokenInfo] = None

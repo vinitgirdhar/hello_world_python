@@ -62,7 +62,9 @@ const Login: React.FC = () => {
   const onFinish = async (values: LoginFormData) => {
     setLoading(true);
     try {
+      console.log('Login attempt with:', values.email);
       const ok = await login(values.email, values.password);
+      console.log('Login result:', ok);
       if (!ok) {
         message.error('Login failed! Check credentials.');
         return;
@@ -70,11 +72,13 @@ const Login: React.FC = () => {
 
       // read stored user from localStorage (AuthProvider saved it there)
       const stored = localStorage.getItem('paanicare-user');
+      console.log('Stored user:', stored);
       const clientUser = stored ? JSON.parse(stored) : null;
       const role = clientUser?.role || 'community_user';
 
       // All roles go to /dashboard which shows role-specific views
       const dest = from && from !== '/login' ? from : '/dashboard';
+      console.log('Navigating to:', dest);
       message.success('Login successful!');
       navigate(dest, { replace: true });
     } catch (error) {

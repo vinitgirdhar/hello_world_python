@@ -144,19 +144,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     try {
+      console.log('AuthContext: Attempting login to', `${API_BASE}/api/auth/login`);
       const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
+      console.log('AuthContext: Response status', res.status);
+
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
+        console.log('AuthContext: Login failed', err);
         message.error(err.detail || "Login failed");
         return false;
       }
 
       const data = await res.json();
+      console.log('AuthContext: Login response data', data);
       const token = data.access_token || data.token;
       if (!token) {
         message.error("No token returned by server");
@@ -169,14 +174,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       // If backend returns user info, use it; otherwise try to fetch /api/auth/me
       let storedUser: User | null = null;
       if (data.user) {
+        console.log('AuthContext: Mapping user from response', data.user);
         storedUser = mapBackendUserToClient(data.user);
       } else {
         // try to fetch profile using saved token
+        console.log('AuthContext: No user in response, fetching profile');
         storedUser = await fetchProfile();
       }
 
       // fallback minimal user if profile missing
       if (!storedUser) {
+        console.log('AuthContext: Using fallback user');
         storedUser = {
           id: Date.now().toString(),
           email,
@@ -185,6 +193,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         };
       }
 
+      console.log('AuthContext: Final user', storedUser);
       saveUserAndToken(storedUser, token);
       message.success("Logged in");
       return true;

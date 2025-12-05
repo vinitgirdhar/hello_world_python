@@ -75,12 +75,13 @@ app = FastAPI(title="Nirogya ML Backend (modular)")
 # CORS - allow dev origins; change to explicit origins in production
 origins = [
     "http://localhost:3000",
+    "http://localhost:3001",
     "http://localhost:5173",
     "http://localhost:8501",
 ]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins or ["*"],
+    allow_origins=["*"],  # Allow all origins for development
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
