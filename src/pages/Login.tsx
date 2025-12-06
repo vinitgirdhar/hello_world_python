@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { message } from 'antd';
-import { Mail, Lock, CheckCircle2, ArrowLeft, Eye, EyeOff, Droplets } from 'lucide-react';
+import { Mail, Lock, CheckCircle2, ArrowLeft, Eye, EyeOff, Droplets, ChevronUp, ChevronDown, Users } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './Login.css';
@@ -26,7 +26,8 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [showDemo, setShowDemo] = useState(false);
+  const [selectedDemoIndex, setSelectedDemoIndex] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -112,9 +113,9 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleGoogleLogin = () => {
-    console.log("Google login clicked");
-    message.info("Google login coming soon!");
+  const scrollToDemo = (index: number) => {
+    const newIndex = Math.max(0, Math.min(index, demoAccounts.length - 1));
+    setSelectedDemoIndex(newIndex);
   };
 
   const demoAccounts = [
@@ -137,12 +138,13 @@ const Login: React.FC = () => {
           width: '42%', 
           background: 'linear-gradient(to bottom right, #2563eb, #4338ca)', 
           color: 'white', 
-          padding: '2rem 2.5rem', 
+          padding: '2rem 2.5rem 2rem 4rem',
           display: 'flex', 
           flexDirection: 'column', 
           position: 'relative', 
           overflow: 'hidden',
-          minHeight: '100vh'
+          minHeight: '100vh',
+          boxSizing: 'border-box'
         }}
       >
         {/* Abstract Background Shapes */}
@@ -152,7 +154,7 @@ const Login: React.FC = () => {
         </div>
 
         {/* Logo */}
-        <div style={{ position: 'relative', zIndex: 10, flexShrink: 0, marginBottom: '2rem' }}>
+        <div style={{ position: 'relative', zIndex: 10, flexShrink: 0, marginBottom: '2rem', paddingLeft: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <div style={{ padding: '0.5rem', backgroundColor: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)', borderRadius: '0.5rem' }}>
               <Droplets style={{ width: '1.75rem', height: '1.75rem', color: 'white' }} />
@@ -162,7 +164,7 @@ const Login: React.FC = () => {
         </div>
 
         {/* Main Content */}
-        <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', justifyContent: 'center', flexGrow: 1 }}>
+        <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', justifyContent: 'center', flexGrow: 1, paddingLeft: 0 }}>
           <h2 style={{ fontSize: '1.875rem', fontWeight: 700, lineHeight: 1.3, margin: '0 0 0.75rem 0' }}>
             Community Health <br /> & Wellness Platform
           </h2>
@@ -179,7 +181,7 @@ const Login: React.FC = () => {
         </div>
 
         {/* Copyright - Fixed at bottom */}
-        <div style={{ position: 'relative', zIndex: 10, fontSize: '0.8rem', color: '#93c5fd', flexShrink: 0, marginTop: 'auto', paddingTop: '1rem' }}>
+        <div style={{ position: 'relative', zIndex: 10, fontSize: '0.8rem', color: '#93c5fd', flexShrink: 0, marginTop: 'auto', paddingTop: '1rem', paddingLeft: 0 }}>
           © 2025 Nirogya Platform. All rights reserved.
         </div>
       </div>
@@ -306,76 +308,194 @@ const Login: React.FC = () => {
               {loading ? 'Signing In...' : 'Sign In'}
             </button>
 
-            <div className="relative my-8">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-200"></div>
+            {/* Demo Account Carousel Section */}
+            <div style={{ marginTop: '1.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                <Users style={{ width: '1rem', height: '1rem', color: '#64748b' }} />
+                <span style={{ fontSize: '0.8rem', fontWeight: 500, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Try Demo Account</span>
               </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-slate-500">Or continue with</span>
+              
+              {/* Carousel Container */}
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '0.5rem',
+                padding: '0.5rem',
+                backgroundColor: '#f8fafc',
+                borderRadius: '0.75rem',
+                border: '1px solid #e2e8f0'
+              }}>
+                {/* Up Arrow */}
+                <button
+                  type="button"
+                  onClick={() => scrollToDemo(selectedDemoIndex - 1)}
+                  disabled={selectedDemoIndex === 0 || loading}
+                  style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    width: '2rem',
+                    height: '2rem',
+                    borderRadius: '0.375rem',
+                    backgroundColor: selectedDemoIndex === 0 ? '#f1f5f9' : '#e2e8f0',
+                    border: 'none',
+                    cursor: selectedDemoIndex === 0 ? 'not-allowed' : 'pointer',
+                    color: selectedDemoIndex === 0 ? '#cbd5e1' : '#475569',
+                    transition: 'all 0.15s ease',
+                    flexShrink: 0
+                  }}
+                >
+                  <ChevronUp style={{ width: '1.25rem', height: '1.25rem' }} />
+                </button>
+
+                {/* Carousel Window */}
+                <div 
+                  ref={carouselRef}
+                  style={{ 
+                    flex: 1,
+                    overflow: 'hidden',
+                    position: 'relative',
+                    height: '4.5rem'
+                  }}
+                >
+                  <div style={{ 
+                    display: 'flex',
+                    flexDirection: 'column',
+                    transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    transform: `translateY(-${selectedDemoIndex * 4.5}rem)`
+                  }}>
+                    {demoAccounts.map((demo, index) => (
+                      <div
+                        key={demo.role}
+                        onClick={() => !loading && setSelectedDemoIndex(index)}
+                        style={{ 
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.75rem',
+                          padding: '0.75rem',
+                          height: '4.5rem',
+                          boxSizing: 'border-box',
+                          cursor: loading ? 'not-allowed' : 'pointer',
+                          backgroundColor: index === selectedDemoIndex ? 'white' : 'transparent',
+                          borderRadius: '0.5rem',
+                          border: index === selectedDemoIndex ? '2px solid #2563eb' : '2px solid transparent',
+                          transition: 'all 0.2s ease',
+                          opacity: index === selectedDemoIndex ? 1 : 0.5
+                        }}
+                      >
+                        <div style={{ 
+                          width: '2.5rem', 
+                          height: '2.5rem', 
+                          borderRadius: '50%', 
+                          backgroundColor: demo.color,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'white',
+                          fontWeight: 700,
+                          fontSize: '1rem',
+                          flexShrink: 0,
+                          boxShadow: index === selectedDemoIndex ? '0 4px 6px -1px rgba(0,0,0,0.1)' : 'none'
+                        }}>
+                          {demo.title.charAt(0)}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <p style={{ 
+                            margin: 0, 
+                            fontSize: '0.875rem', 
+                            fontWeight: 600, 
+                            color: '#1e293b',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }}>{demo.title}</p>
+                          <p style={{ 
+                            margin: '0.125rem 0 0 0', 
+                            fontSize: '0.75rem', 
+                            color: '#64748b',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }}>{demo.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Down Arrow */}
+                <button
+                  type="button"
+                  onClick={() => scrollToDemo(selectedDemoIndex + 1)}
+                  disabled={selectedDemoIndex === demoAccounts.length - 1 || loading}
+                  style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    width: '2rem',
+                    height: '2rem',
+                    borderRadius: '0.375rem',
+                    backgroundColor: selectedDemoIndex === demoAccounts.length - 1 ? '#f1f5f9' : '#e2e8f0',
+                    border: 'none',
+                    cursor: selectedDemoIndex === demoAccounts.length - 1 ? 'not-allowed' : 'pointer',
+                    color: selectedDemoIndex === demoAccounts.length - 1 ? '#cbd5e1' : '#475569',
+                    transition: 'all 0.15s ease',
+                    flexShrink: 0
+                  }}
+                >
+                  <ChevronDown style={{ width: '1.25rem', height: '1.25rem' }} />
+                </button>
               </div>
-            </div>
 
-            {/* Google Login Button */}
-            <button
-              type="button"
-              onClick={handleGoogleLogin}
-              className="login-google-btn w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium py-3 rounded-lg flex items-center justify-center gap-3 transition-colors duration-200 cursor-pointer"
-            >
-              <svg className="w-5 h-5" viewBox="0 0 24 24">
-                <path
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                  fill="#4285F4"
-                />
-                <path
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                  fill="#34A853"
-                />
-                <path
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.84z"
-                  fill="#FBBC05"
-                />
-                <path
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                  fill="#EA4335"
-                />
-              </svg>
-              Sign in with Google
-            </button>
-
-            {/* Demo Accounts Section */}
-            <div className="mt-6">
+              {/* Demo Login Button */}
               <button
                 type="button"
-                onClick={() => setShowDemo(!showDemo)}
-                className="login-demo-toggle w-full text-center text-sm text-slate-500 hover:text-blue-600 font-medium py-2 transition-colors bg-transparent border-none cursor-pointer"
+                onClick={() => handleDemoLogin(demoAccounts[selectedDemoIndex].role)}
+                disabled={loading}
+                style={{ 
+                  width: '100%',
+                  marginTop: '0.75rem',
+                  padding: '0.65rem 1rem',
+                  backgroundColor: demoAccounts[selectedDemoIndex].color,
+                  color: 'white',
+                  fontWeight: 600,
+                  fontSize: '0.875rem',
+                  border: 'none',
+                  borderRadius: '0.5rem',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  opacity: loading ? 0.7 : 1,
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'
+                }}
               >
-                {showDemo ? '▲ Hide Demo Accounts' : '▼ Try Demo Accounts'}
+                {loading ? 'Signing In...' : `Login as ${demoAccounts[selectedDemoIndex].title}`}
               </button>
 
-              {showDemo && (
-                <div className="mt-4 space-y-2 max-h-64 overflow-y-auto">
-                  {demoAccounts.map((demo) => (
-                    <button
-                      key={demo.role}
-                      type="button"
-                      onClick={() => handleDemoLogin(demo.role)}
-                      disabled={loading}
-                      className="login-demo-card w-full p-3 bg-slate-50 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition-colors cursor-pointer border border-slate-200 text-left disabled:opacity-50"
-                    >
-                      <div 
-                        className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
-                        style={{ backgroundColor: demo.color }}
-                      >
-                        {demo.title.charAt(0)}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-slate-800 truncate">{demo.title}</p>
-                        <p className="text-xs text-slate-500 truncate">{demo.description}</p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
+              {/* Dots Indicator */}
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                gap: '0.375rem', 
+                marginTop: '0.75rem' 
+              }}>
+                {demoAccounts.map((_, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => setSelectedDemoIndex(index)}
+                    style={{ 
+                      width: index === selectedDemoIndex ? '1.25rem' : '0.375rem',
+                      height: '0.375rem',
+                      borderRadius: '0.25rem',
+                      backgroundColor: index === selectedDemoIndex ? '#2563eb' : '#cbd5e1',
+                      border: 'none',
+                      padding: 0,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
+                  />
+                ))}
+              </div>
             </div>
 
             <p className="text-center text-sm text-slate-600 mt-8">

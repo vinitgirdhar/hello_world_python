@@ -19,22 +19,34 @@
 .login-left-panel {
   background: linear-gradient(to bottom right, #2563eb, #4338ca);
   color: white;
-  padding: 2rem;
+  padding: 2rem 2.5rem 2rem 4rem !important;
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  min-height: 400px;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
+/* Remove responsive padding shifts for left panel */
 @media (min-width: 768px) {
   .login-left-panel {
     min-height: 100vh;
-    padding: 3rem;
+    padding: 2rem 2.5rem 2rem 4rem !important;
   }
 }
 
-.min-h-\[400px\] { min-height: 400px; }
+@media (min-width: 1024px) {
+  .login-left-panel {
+    padding: 2rem 2.5rem 2rem 4rem !important;
+  }
+}
+
+@media (min-width: 1440px) {
+  .login-left-panel {
+    padding: 2rem 2.5rem 2rem 4rem !important;
+  }
+}
 
 /* Right Panel - Form */
 .login-right-panel {
