@@ -26,6 +26,8 @@ import News from './pages/News';
 import DiseaseMapping from './pages/DiseaseMapping';
 import ASHACommunication from './pages/ASHACommunication';
 import WaterQualityPrediction from './pages/ReportWaterQuality';
+import GovernmentReports from './pages/GovermentReports'; 
+import AshaWorker from './pages/AshaWorker';
 
 // ⭐ NEW IMPORT — this is the correct page for /report-symptoms
 import SymptomReporting from './pages/SymptomReporting';
@@ -173,7 +175,20 @@ function App() {
                   </Layout>
                 </ProtectedRoute>
               } />
-
+              <Route path="/goverment-reports" element={
+                <ProtectedRoute requiredRole={["district_health_official", "government_body", "community_user", "volunteer"]}>
+                  <Layout type="dashboard"> 
+                    <GovernmentReports />
+                  </Layout>
+                </ProtectedRoute>
+              } />
+              <Route path="/asha-worker" element={
+                <ProtectedRoute requiredRole={["community_user", "volunteer"]}>
+                  <Layout type="dashboard"> 
+                    <AshaWorker />
+                  </Layout>
+                </ProtectedRoute>
+              } />
             </Routes>
           </Router>
         </LanguageProvider>

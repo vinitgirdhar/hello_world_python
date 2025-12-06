@@ -148,20 +148,20 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div style={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'row', backgroundColor: 'white', overflow: 'hidden', margin: 0, padding: 0 }}>
+    <div style={{ minHeight: '100vh', width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
       
       {/* LEFT PANEL - BRANDING & INFO */}
       <div 
         style={{ 
-          width: '40%', 
+          width: '42%', 
           background: 'linear-gradient(to bottom right, #2563eb, #4338ca)', 
           color: 'white', 
-          padding: '1.5rem 2rem', 
+          padding: '2rem 2.5rem 2rem 4rem',
           display: 'flex', 
           flexDirection: 'column', 
           position: 'relative', 
           overflow: 'hidden',
-          height: '100vh',
+          minHeight: '100vh',
           boxSizing: 'border-box'
         }}
       >
@@ -219,44 +219,42 @@ const Register: React.FC = () => {
       {/* RIGHT PANEL - REGISTER FORM */}
       <div 
         style={{ 
-          width: '60%', 
+          width: '58%', 
           backgroundColor: 'white', 
-          padding: '1.5rem 3rem', 
+          padding: '2.5rem 4rem', 
           display: 'flex', 
           flexDirection: 'column', 
           justifyContent: 'center', 
-          overflowY: 'auto',
-          height: '100vh',
-          boxSizing: 'border-box'
+          overflowY: 'auto'
         }}
       >
-        <div style={{ maxWidth: '28rem', width: '100%', margin: '0 auto' }}>
+        <div style={{ maxWidth: '26rem', width: '100%', margin: '0 auto' }}>
           
           <button 
             onClick={() => navigate('/login')}
-            style={{ display: 'flex', alignItems: 'center', color: '#64748b', marginBottom: '1rem', fontSize: '0.8rem', fontWeight: 500, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
+            style={{ display: 'flex', alignItems: 'center', color: '#64748b', marginBottom: '2rem', fontSize: '0.875rem', fontWeight: 500, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
           >
             <ArrowLeft style={{ width: '1rem', height: '1rem', marginRight: '0.5rem' }} />
             Back to Login
           </button>
 
-          <div style={{ marginBottom: '1rem' }}>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a', margin: '0 0 0.35rem 0' }}>Create Account</h2>
-            <p style={{ color: '#64748b', margin: 0, fontSize: '0.875rem' }}>
+          <div style={{ marginBottom: '1.5rem' }}>
+            <h2 style={{ fontSize: '1.875rem', fontWeight: 700, color: '#0f172a', margin: '0 0 0.5rem 0', lineHeight: 1.2 }}>Create Account</h2>
+            <p style={{ color: '#64748b', margin: 0, fontSize: '1rem' }}>
               Fill in your details to get started with Nirogya.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             
             {/* Full Name */}
             <div>
-              <label style={{ fontSize: '0.8rem', fontWeight: 500, color: '#334155', display: 'block', marginBottom: '0.25rem' }}>
+              <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#334155', display: 'block', marginBottom: '0.5rem' }}>
                 Full Name *
               </label>
               <div style={{ position: 'relative' }}>
-                <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '2.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
-                  <User style={{ width: '1rem', height: '1rem' }} />
+                <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
+                  <User style={{ width: '1.25rem', height: '1.25rem' }} />
                 </div>
                 <input
                   type="text"
@@ -265,19 +263,19 @@ const Register: React.FC = () => {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  style={{ width: '100%', paddingLeft: '2.25rem', paddingRight: '0.75rem', paddingTop: '0.5rem', paddingBottom: '0.5rem', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '0.375rem', fontSize: '0.875rem', color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
+                  style={{ width: '100%', paddingLeft: '2.5rem', paddingRight: '1rem', paddingTop: '0.875rem', paddingBottom: '0.875rem', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '0.5rem', fontSize: '1rem', color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
                 />
               </div>
             </div>
 
             {/* Email */}
             <div>
-              <label style={{ fontSize: '0.8rem', fontWeight: 500, color: '#334155', display: 'block', marginBottom: '0.25rem' }}>
+              <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#334155', display: 'block', marginBottom: '0.5rem' }}>
                 Email Address *
               </label>
               <div style={{ position: 'relative' }}>
-                <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '2.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
-                  <Mail style={{ width: '1rem', height: '1rem' }} />
+                <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
+                  <Mail style={{ width: '1.25rem', height: '1.25rem' }} />
                 </div>
                 <input
                   type="email"
@@ -286,78 +284,78 @@ const Register: React.FC = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  style={{ width: '100%', paddingLeft: '2.25rem', paddingRight: '0.75rem', paddingTop: '0.5rem', paddingBottom: '0.5rem', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '0.375rem', fontSize: '0.875rem', color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
+                  style={{ width: '100%', paddingLeft: '2.5rem', paddingRight: '1rem', paddingTop: '0.875rem', paddingBottom: '0.875rem', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '0.5rem', fontSize: '1rem', color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
                 />
               </div>
             </div>
 
             {/* Password Row */}
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', gap: '1rem' }}>
               {/* Password */}
               <div style={{ flex: 1 }}>
-                <label style={{ fontSize: '0.8rem', fontWeight: 500, color: '#334155', display: 'block', marginBottom: '0.25rem' }}>
+                <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#334155', display: 'block', marginBottom: '0.5rem' }}>
                   Password *
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '2.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
-                    <Lock style={{ width: '1rem', height: '1rem' }} />
+                  <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
+                    <Lock style={{ width: '1.25rem', height: '1.25rem' }} />
                   </div>
                   <input
                     type={showPassword ? "text" : "password"}
                     name="password"
-                    placeholder="Min. 6 chars"
+                    placeholder="Min. 6 characters"
                     value={formData.password}
                     onChange={handleChange}
                     required
-                    style={{ width: '100%', paddingLeft: '2.25rem', paddingRight: '2.25rem', paddingTop: '0.5rem', paddingBottom: '0.5rem', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '0.375rem', fontSize: '0.875rem', color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
+                    style={{ width: '100%', paddingLeft: '2.5rem', paddingRight: '3rem', paddingTop: '0.875rem', paddingBottom: '0.875rem', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '0.5rem', fontSize: '1rem', color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    style={{ position: 'absolute', right: 0, top: 0, height: '100%', width: '2.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', background: 'transparent', border: 'none', cursor: 'pointer' }}
+                    style={{ position: 'absolute', right: 0, top: 0, height: '100%', width: '3rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', background: 'transparent', border: 'none', cursor: 'pointer' }}
                   >
-                    {showPassword ? <EyeOff style={{ width: '1rem', height: '1rem' }} /> : <Eye style={{ width: '1rem', height: '1rem' }} />}
+                    {showPassword ? <EyeOff style={{ width: '1.25rem', height: '1.25rem' }} /> : <Eye style={{ width: '1.25rem', height: '1.25rem' }} />}
                   </button>
                 </div>
               </div>
 
               {/* Confirm Password */}
               <div style={{ flex: 1 }}>
-                <label style={{ fontSize: '0.8rem', fontWeight: 500, color: '#334155', display: 'block', marginBottom: '0.25rem' }}>
+                <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#334155', display: 'block', marginBottom: '0.5rem' }}>
                   Confirm Password *
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '2.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
-                    <Lock style={{ width: '1rem', height: '1rem' }} />
+                  <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
+                    <Lock style={{ width: '1.25rem', height: '1.25rem' }} />
                   </div>
                   <input
                     type={showConfirmPassword ? "text" : "password"}
                     name="confirmPassword"
-                    placeholder="Re-enter"
+                    placeholder="Re-enter password"
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     required
-                    style={{ width: '100%', paddingLeft: '2.25rem', paddingRight: '2.25rem', paddingTop: '0.5rem', paddingBottom: '0.5rem', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '0.375rem', fontSize: '0.875rem', color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
+                    style={{ width: '100%', paddingLeft: '2.5rem', paddingRight: '3rem', paddingTop: '0.875rem', paddingBottom: '0.875rem', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '0.5rem', fontSize: '1rem', color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    style={{ position: 'absolute', right: 0, top: 0, height: '100%', width: '2.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', background: 'transparent', border: 'none', cursor: 'pointer' }}
+                    style={{ position: 'absolute', right: 0, top: 0, height: '100%', width: '3rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', background: 'transparent', border: 'none', cursor: 'pointer' }}
                   >
-                    {showConfirmPassword ? <EyeOff style={{ width: '1rem', height: '1rem' }} /> : <Eye style={{ width: '1rem', height: '1rem' }} />}
+                    {showConfirmPassword ? <EyeOff style={{ width: '1.25rem', height: '1.25rem' }} /> : <Eye style={{ width: '1.25rem', height: '1.25rem' }} />}
                   </button>
                 </div>
               </div>
             </div>
 
             {/* Organization */}
-            <div>
-              <label style={{ fontSize: '0.8rem', fontWeight: 500, color: '#334155', display: 'block', marginBottom: '0.25rem' }}>
+            <div style={{ marginTop: '0.5rem' }}>
+              <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#334155', display: 'block', marginBottom: '0.5rem' }}>
                 Organization <span style={{ color: '#94a3b8', fontWeight: 400 }}>(Optional)</span>
               </label>
               <div style={{ position: 'relative' }}>
-                <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '2.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
-                  <Building2 style={{ width: '1rem', height: '1rem' }} />
+                <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
+                  <Building2 style={{ width: '1.25rem', height: '1.25rem' }} />
                 </div>
                 <input
                   type="text"
@@ -365,21 +363,21 @@ const Register: React.FC = () => {
                   placeholder="Your organization name"
                   value={formData.organization}
                   onChange={handleChange}
-                  style={{ width: '100%', paddingLeft: '2.25rem', paddingRight: '0.75rem', paddingTop: '0.5rem', paddingBottom: '0.5rem', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '0.375rem', fontSize: '0.875rem', color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
+                  style={{ width: '100%', paddingLeft: '2.5rem', paddingRight: '1rem', paddingTop: '0.875rem', paddingBottom: '0.875rem', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '0.5rem', fontSize: '1rem', color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
                 />
               </div>
             </div>
 
             {/* Location & Phone Row */}
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
               {/* Location */}
               <div style={{ flex: 1 }}>
-                <label style={{ fontSize: '0.8rem', fontWeight: 500, color: '#334155', display: 'block', marginBottom: '0.25rem' }}>
+                <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#334155', display: 'block', marginBottom: '0.5rem' }}>
                   Location <span style={{ color: '#94a3b8', fontWeight: 400 }}>(Optional)</span>
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '2.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
-                    <MapPin style={{ width: '1rem', height: '1rem' }} />
+                  <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
+                    <MapPin style={{ width: '1.25rem', height: '1.25rem' }} />
                   </div>
                   <input
                     type="text"
@@ -387,19 +385,19 @@ const Register: React.FC = () => {
                     placeholder="City, State"
                     value={formData.location}
                     onChange={handleChange}
-                    style={{ width: '100%', paddingLeft: '2.25rem', paddingRight: '0.75rem', paddingTop: '0.5rem', paddingBottom: '0.5rem', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '0.375rem', fontSize: '0.875rem', color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
+                    style={{ width: '100%', paddingLeft: '2.5rem', paddingRight: '1rem', paddingTop: '0.875rem', paddingBottom: '0.875rem', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '0.5rem', fontSize: '1rem', color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
                   />
                 </div>
               </div>
 
               {/* Phone */}
               <div style={{ flex: 1 }}>
-                <label style={{ fontSize: '0.8rem', fontWeight: 500, color: '#334155', display: 'block', marginBottom: '0.25rem' }}>
+                <label style={{ fontSize: '0.875rem', fontWeight: 500, color: '#334155', display: 'block', marginBottom: '0.5rem' }}>
                   Phone <span style={{ color: '#94a3b8', fontWeight: 400 }}>(Optional)</span>
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '2.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
-                    <Phone style={{ width: '1rem', height: '1rem' }} />
+                  <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', pointerEvents: 'none' }}>
+                    <Phone style={{ width: '1.25rem', height: '1.25rem' }} />
                   </div>
                   <input
                     type="tel"
@@ -407,7 +405,7 @@ const Register: React.FC = () => {
                     placeholder="+91-XXXXXXXXXX"
                     value={formData.phone}
                     onChange={handleChange}
-                    style={{ width: '100%', paddingLeft: '2.25rem', paddingRight: '0.75rem', paddingTop: '0.5rem', paddingBottom: '0.5rem', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '0.375rem', fontSize: '0.875rem', color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
+                    style={{ width: '100%', paddingLeft: '2.5rem', paddingRight: '1rem', paddingTop: '0.875rem', paddingBottom: '0.875rem', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '0.5rem', fontSize: '1rem', color: '#1e293b', outline: 'none', boxSizing: 'border-box' }}
                   />
                 </div>
               </div>
@@ -421,21 +419,22 @@ const Register: React.FC = () => {
                 width: '100%', 
                 backgroundColor: loading ? '#93c5fd' : '#2563eb', 
                 color: 'white', 
-                fontWeight: 600, 
-                padding: '0.6rem 1.25rem', 
-                borderRadius: '0.375rem', 
+                fontWeight: 700, 
+                padding: '0.875rem 1.5rem', 
+                borderRadius: '0.5rem', 
                 border: 'none', 
                 cursor: loading ? 'not-allowed' : 'pointer', 
-                fontSize: '0.9rem',
-                marginTop: '0.25rem',
-                boxShadow: '0 4px 6px -1px rgba(37, 99, 235, 0.25)'
+                fontSize: '1rem',
+                marginTop: '1.25rem',
+                boxShadow: '0 10px 15px -3px rgba(37, 99, 235, 0.3)',
+                transition: 'all 0.2s ease'
               }}
             >
               {loading ? 'Creating Account...' : 'Create Account'}
             </button>
 
             {/* Login Link */}
-            <p style={{ textAlign: 'center', fontSize: '0.875rem', color: '#475569', marginTop: '0.75rem' }}>
+            <p style={{ textAlign: 'center', fontSize: '0.875rem', color: '#475569', marginTop: '1.5rem' }}>
               Already have an account?{' '}
               <Link to="/login" style={{ fontWeight: 600, color: '#2563eb', textDecoration: 'none' }}>
                 Sign in here

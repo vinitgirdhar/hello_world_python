@@ -20,7 +20,8 @@ import {
   ThunderboltOutlined,
   BookOutlined,
   FileTextOutlined,
-  MedicineBoxOutlined
+  MedicineBoxOutlined,
+  UserAddOutlined
 } from '@ant-design/icons';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -128,6 +129,8 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
     { key: '/community', icon: <TeamOutlined />, label: t('nav.community'), badge: 0 },
     { key: '/education', icon: <BookOutlined />, label: t('nav.education'), badge: 0 },
     { key: '/reports', icon: <FileTextOutlined />, label: t('nav.reports'), badge: 0 },
+    { key: '/goverment-reports', icon: <FileTextOutlined />, label: 'Goverment Reports', badge: 0 },
+    { key: '/asha-worker', icon: <UserAddOutlined />, label: 'Apply for ASHA Worker', badge: 0 },
   ];
 
   // ---------------------------
@@ -144,7 +147,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
         // ASHA: dashboard, asha communication, report water, report symptoms, alerts, education, community
         return ['/', '/asha-communication', '/ai-prediction', '/report-symptoms', '/alerts', '/education', '/community'];
       case 'community_user':
-        return ['/community', '/alerts', '/education'];
+        return ['/community', '/alerts', '/education', '/goverment-reports', '/asha-worker'];
       case 'healthcare_worker':
         return ['/', '/health', '/disease-mapping', '/alerts'];
       case 'district_health_official':
@@ -153,8 +156,9 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
         // everything except ASHA-specific items
         return all.filter(k => !['/asha-communication', '/ai-prediction', '/report-symptoms'].includes(k));
       case 'volunteer':
-        return ['/', '/community', '/report-symptoms', '/alerts', '/education'];
+        return ['/', '/community', '/report-symptoms', '/alerts', '/education', '/goverment-reports', '/asha-worker'];
       default:
+        
         return ['/'];
     }
   };
