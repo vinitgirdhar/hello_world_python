@@ -54,8 +54,10 @@ def serialize_bson(obj):
 # --------------------------
 # FastAPI & imports
 # --------------------------
-from fastapi import FastAPI, Body, HTTPException
+from fastapi import FastAPI, Body, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
 from pydantic import BaseModel
 
 # Correct imports (no backend.)
@@ -74,6 +76,17 @@ POLL_INTERVAL_SECONDS = int(os.getenv("POLL_INTERVAL_SECONDS", "5"))
 
 # FastAPI init
 app = FastAPI(title="Nirogya ML Backend (modular)")
+
+# Add validation error handler to see detailed errors
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    import logging
+    logging.error(f"Validation error for {request.url}: {exc.errors()}")
+    logging.error(f"Request body: {exc.body}")
+    return JSONResponse(
+        status_code=400,
+        content={"detail": exc.errors(), "body": str(exc.body)[:500]}
+    )
 
 # CORS - allow dev origins; change to explicit origins in production
 origins = [

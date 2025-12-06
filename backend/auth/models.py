@@ -7,15 +7,29 @@ from datetime import datetime
 # Core auth models
 # ---------------------------
 class RegisterRequest(BaseModel):
-    full_name: str = Field(..., min_length=2)
+    full_name: str = Field(..., min_length=2, description="User's full name")
     email: EmailStr
     # role from signup is ignored / forced to community on backend logic
-    role: str = Field(..., min_length=1)
-    password: str = Field(..., min_length=6)
-    confirm_password: str = Field(..., min_length=6)
-    organization: Optional[str] = None
-    location: Optional[str] = None
-    phone: Optional[str] = None
+    role: str = Field(default="community_user", min_length=1)
+    password: str = Field(..., min_length=6, description="Password")
+    confirm_password: str = Field(..., min_length=6, description="Confirm password")
+    organization: Optional[str] = Field(None, description="Organization name")
+    location: Optional[str] = Field(None, description="Location")
+    phone: Optional[str] = Field(None, description="Phone number")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "full_name": "John Doe",
+                "email": "john@example.com",
+                "role": "community_user",
+                "password": "password123",
+                "confirm_password": "password123",
+                "organization": "Example Org",
+                "location": "Mumbai",
+                "phone": "+91-9876543210"
+            }
+        }
 
 
 class UserOut(BaseModel):

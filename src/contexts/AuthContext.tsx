@@ -217,16 +217,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const register = async (data: RegisterData): Promise<boolean> => {
     setLoading(true);
     try {
+      // Ensure all required fields are present and clean
+      if (!data.name || !data.email || !data.password) {
+        message.error("Please fill in all required fields");
+        return false;
+      }
+
       const body = {
-        full_name: data.name,
-        email: data.email,
-        role: data.role,
+        full_name: data.name.trim(),
+        email: data.email.trim().toLowerCase(),
+        role: data.role || "community_user",
         password: data.password,
-        confirm_password: data.confirmPassword ?? data.password,
-        organization: data.organization ?? null,
-        location: data.location ?? null,
-        phone: data.phone ?? null,
+        confirm_password: data.confirmPassword || data.password,
+        organization: data.organization?.trim() || undefined,
+        location: data.location?.trim() || undefined,
+        phone: data.phone?.trim() || undefined,
       };
+
+      console.log("Register request body:", JSON.stringify(body, null, 2));
 
       const res = await fetch(`${API_BASE}/api/auth/register`, {
         method: "POST",
@@ -234,18 +242,41 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         body: JSON.stringify(body),
       });
 
+      console.log("Register response status:", res.status);
+
       if (!res.ok) {
         const e = await res.json().catch(() => ({}));
-        message.error(e.detail || "Registration failed");
+        console.error("Register error response:", e);
+        
+        // Handle validation errors
+        if (e.detail && Array.isArray(e.detail)) {
+          const errors = e.detail.map((err: any) => 
+            `${err.loc?.join('.') || 'field'}: ${err.msg}`
+          ).join(', ');
+          message.error(`Validation error: ${errors}`);
+        } else {
+          message.error(e.detail || "Registration failed. Please try again.");
+        }
         return false;
       }
 
-      // Auto-login
-      await login(data.email, data.password);
+      // Registration successful - parse response
+      const userData = await res.json();
+      console.log("Registration successful, user data:", userData);
+      
+      message.success("Account created successfully!");
+      
+      // Auto-login with the credentials
+      const loginSuccess = await login(data.email.trim(), data.password);
+      
+      if (!loginSuccess) {
+        message.warning("Account created but auto-login failed. Please login manually.");
+      }
+      
       return true;
     } catch (err) {
-      console.error(err);
-      message.error("Registration failed");
+      console.error("Registration error:", err);
+      message.error("Registration failed. Please check your connection and try again.");
       return false;
     } finally {
       setLoading(false);

@@ -77,9 +77,19 @@ def generate_temp_password(length: int = 10) -> str:
 # ---------------------------
 @router.post("/register", response_model=UserOut, status_code=status.HTTP_201_CREATED)
 async def register(payload: RegisterRequest):
+    import logging
+    logging.info(f"Register attempt - email: {payload.email}, name: {payload.full_name}, role: {payload.role}")
+    logging.info(f"Payload data: full_name={payload.full_name}, email={payload.email}, role={payload.role}, org={payload.organization}, loc={payload.location}, phone={payload.phone}")
 
+    # Validate password match
     if payload.password != payload.confirm_password:
+        logging.error("Password mismatch")
         raise HTTPException(status_code=400, detail="Passwords do not match")
+    
+    # Validate password length
+    if len(payload.password) < 6:
+        logging.error("Password too short")
+        raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
 
     email = payload.email.lower().strip()
 

@@ -71,33 +71,76 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validate required fields
+    if (!formData.name || !formData.name.trim()) {
+      message.error('Please enter your name');
+      return;
+    }
+    
+    if (formData.name.trim().length < 2) {
+      message.error('Name must be at least 2 characters');
+      return;
+    }
+    
+    if (!formData.email || !formData.email.trim()) {
+      message.error('Please enter your email');
+      return;
+    }
+    
+    if (!formData.password) {
+      message.error('Please enter a password');
+      return;
+    }
+    
+    if (formData.password.length < 6) {
+      message.error('Password must be at least 6 characters');
+      return;
+    }
+    
+    if (!formData.confirmPassword) {
+      message.error('Please confirm your password');
+      return;
+    }
+    
     if (formData.password !== formData.confirmPassword) {
       message.error('Passwords do not match!');
       return;
     }
 
-    if (formData.password.length < 6) {
-      message.error('Password must be at least 6 characters!');
-      return;
-    }
-
     setLoading(true);
     try {
-      const success = await register({
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
+      console.log("Submitting registration with data:", {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        password: '[HIDDEN]',
+        confirmPassword: '[HIDDEN]',
         role: 'community_user',
-        organization: formData.organization,
-        location: formData.location,
-        phone: formData.phone,
+        organization: formData.organization?.trim() || '',
+        location: formData.location?.trim() || '',
+        phone: formData.phone?.trim() || '',
+      });
+      
+      const success = await register({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+        role: 'community_user',
+        organization: formData.organization?.trim() || undefined,
+        location: formData.location?.trim() || undefined,
+        phone: formData.phone?.trim() || undefined,
       });
 
       if (success) {
-        message.success('Account created successfully!');
-        navigate('/dashboard');
+        // Small delay to ensure auth state is updated
+        setTimeout(() => {
+          navigate('/dashboard', { replace: true });
+        }, 500);
+      } else {
+        message.error('Registration failed. Please check the form and try again.');
       }
     } catch (error) {
+      console.error('Registration error:', error);
       message.error('Registration failed. Please try again.');
     } finally {
       setLoading(false);
